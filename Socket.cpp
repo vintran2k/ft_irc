@@ -33,3 +33,9 @@ void	Socket::bind(sockaddr const *addr, socklen_t len) {
 		throw std::runtime_error("bind() failed");
 	std::memcpy(&_addr, addr, len); // ?
 }
+
+void	Socket::listen(int backlog) {
+
+	if (::listen(_fd, backlog) == -1)
+		throw std::runtime_error("listen() failed");
+}
