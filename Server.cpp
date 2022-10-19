@@ -10,7 +10,7 @@ Server::Server(int port, std::string const & password) : _port(port), _password(
 	if (setsockopt(_socket.getFd(), SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) == -1)
 		throw std::runtime_error("setsockopt() failed");
 
-	// Assign an address to the socket
+	//	Assign an address to the socket
 	sockaddr_in	addr;
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
