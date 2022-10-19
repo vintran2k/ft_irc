@@ -15,7 +15,7 @@ int main() {
 
 	Socket socketServer;
 
-	socketServer.socket(AF_INET);
+	socketServer.socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	sockaddr_in addrServer;
 	addrServer.sin_addr.s_addr = inet_addr("127.0.0.1");

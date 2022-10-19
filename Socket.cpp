@@ -2,7 +2,10 @@
 
 Socket::Socket() : _fd(-1) {}
 
-Socket::Socket(int family) : _fd(-1) { socket(family); }
+Socket::Socket(int domain, int type, int protocol) : _fd(-1) {
+	
+	socket(domain, type, protocol);
+}
 
 Socket::~Socket() throw() {
 
@@ -16,9 +19,9 @@ int						Socket::getFd() const { return _fd; }
 sockaddr_in	const &		Socket::getAddr() const { return _addr; }
 
 
-void	Socket::socket(int family) {
+void	Socket::socket(int domain, int type, int protocol) {
 
-	_fd = ::socket(family, SOCK_STREAM, IPPROTO_TCP);
+	_fd = ::socket(domain, type, protocol);
 	if (_fd == -1)
 		throw std::runtime_error("socket() failed");
 }

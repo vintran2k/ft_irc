@@ -9,13 +9,13 @@
 class Socket {
 	public:
 		Socket();
-		Socket(int family);
+		Socket(int domain, int type, int protocol);
 		virtual ~Socket() throw();
 
 		int						getFd() const;
 		sockaddr_in const &		getAddr() const;
 
-		void	socket(int family);
+		void	socket(int domain, int type, int protocol);
 		void	bind(sockaddr const *addr, socklen_t len);
 	
 	private:
