@@ -1,6 +1,7 @@
 NAME_SERVER		=	server
 NAME_CLIENT		=	client
-SRCS_SERVER		=	server.cpp
+SRCS_SERVER		=	server.cpp	\
+					Socket.cpp
 SRCS_CLIENT		=	client.cpp
 CC				=	@c++
 FLAGS			=	-Wall -Wextra -Werror

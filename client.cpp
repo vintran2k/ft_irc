@@ -20,11 +20,11 @@ int main() {
     connect(socketClient, (const struct sockaddr *)&addrServer, sizeof(addrServer));    // connecte le client au server
     printf("connection client\n");
 
-    std::string data; 
+    int data; 
     if (recv(socketClient, &data, sizeof(data), 0) > 0)     // on recoit une data du server
         std::cout << "\ndata: " << data << std::endl;
 
-    data = "iencli";
+    data = 2;
     send(socketClient, &data, sizeof(data), 0);         // on envois une data au server
 
     close(socketClient);
