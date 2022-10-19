@@ -14,9 +14,9 @@ Socket::~Socket() throw() {
 }
 
 
-int						Socket::getFd() const { return _fd; }
+int							Socket::getFd() const { return _fd; }
 
-sockaddr_in	const &		Socket::getAddr() const { return _addr; }
+sockaddr_storage const &	Socket::getAddr() const { return _addr; }
 
 
 void	Socket::socket(int domain, int type, int protocol) {
@@ -30,5 +30,5 @@ void	Socket::bind(sockaddr const *addr, socklen_t len) {
 
 	if (::bind(_fd, addr, len) == -1)
 		throw std::runtime_error("bind() failed");
-	std::memcpy(&_addr, addr, len);
+	std::memcpy(&_addr, addr, len); // ?
 }
