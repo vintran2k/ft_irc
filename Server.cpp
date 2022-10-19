@@ -47,3 +47,9 @@ Server::~Server() {
 	// delete clients
 	// close _fd
 }
+
+int						Server::getPort() const { return _port; }
+
+std::string const &		Server::getPassword() const { return _password; }	//
+
+Socket const &			Server::getSocket() const { return _socket; }

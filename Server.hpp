@@ -10,6 +10,10 @@ class Server {
 		Server(int port, std::string const & password);
 		~Server();
 
+		int						getPort() const;
+		std::string const &		getPassword() const;
+		Socket const &			getSocket() const;
+
 	private:
 		int					_port;
 		std::string const	_password;
