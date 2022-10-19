@@ -20,7 +20,7 @@ Server::Server(int port, std::string const & password) : _port(port), _password(
 	//	Listen for connections
 	_socket.listen(MAX_CONNECTIONS);
 
-	std::cout
+	std::cout																			<< BYELLOW
 	<<	"																			" 	<< std::endl
 	<<	"	                   ,----,												"	<< std::endl
 	<<	"	                 ,/   .`|												"	<< std::endl
@@ -37,7 +37,8 @@ Server::Server(int port, std::string const & password) : _port(port), _password(
 	<<	"	|   :  \\       '---'    .'  .'   : ;   |.'  :   : :-'   |   :    /		"	<< std::endl
 	<<	"	|   | ,'             ,---, '   .'  '---'    |   |.'      \\   \\ .'		"	<< std::endl
 	<<	"	`----'               ;   |  .'              `---'         `---`			"	<< std::endl
-	<<	"	                     `---'												"	<< std::endl;
+	<<	"	                     `---'												"	<< std::endl
+	<<	BGREEN << "\n\nServer started on " << inet_ntoa(addr.sin_addr) << ":" << port << WHITE << std::endl;
 
 }
 
