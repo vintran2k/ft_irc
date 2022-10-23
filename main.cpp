@@ -36,7 +36,7 @@ int	main(int ac, char **av) {
 		IrcServer.run();
 	}
 	catch (std::exception & e) {
-		std::cerr << e.what() << std::endl;
+		std::cerr << BRED << e.what() << WHITE << std::endl;
 		return 1;
 	}
 

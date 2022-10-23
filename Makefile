@@ -4,7 +4,7 @@ SRCS			=	main.cpp		\
 					Server.cpp		\
 					Client.cpp
 CC				=	@c++
-FLAGS			=	-Wall -Wextra -Werror
+FLAGS			=	-Wall -Wextra -Werror -g
 OBJDIR			=	objs
 OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 

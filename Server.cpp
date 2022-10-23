@@ -122,10 +122,18 @@ void	Server::run() {
 					connectClient();
 				else
 				{
-					if (_clients[fd]->recv() != 0)
-						std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
-					else
-						deleteClient(fd);	// ?
+					bool	haveData = true;
+					while (haveData)
+					{
+						if (_clients[fd]->readFd())
+							std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
+						// else		// sauf ctrlD
+						// {
+						// 	deleteClient(fd);
+						// 	break ;
+						// }
+						haveData = _clients[fd]->haveData();
+					}
 				}
 				fdsSelected--;
 			}

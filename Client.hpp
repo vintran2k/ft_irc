@@ -11,13 +11,17 @@ class Client {
 
 		int						getFd() const;
 		std::string const &		getCmd() const;
-		int			recv();
+		int						recv();
+		bool					readFd();
+		bool					haveData();
 		// std::string		send();
 
 		
 	private:
 		int				_fd;
 		std::string 	_cmd;
+		std::string		_readBuffer;
+		size_t			_cmdSize;
 
 		Client();
 		Client(Client const & rhs);

@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-Client::Client(int fd) : _fd(fd) {
+Client::Client(int fd) : _fd(fd), _cmdSize(std::string::npos) {
 
 	std::cout
 	<< GRAY << "Client on socket "
@@ -10,6 +10,7 @@ Client::Client(int fd) : _fd(fd) {
 
 Client::~Client() {
 
+	close(_fd);
 	std::cout
 	<< GRAY << "Client on socket "
 	<< BPURPLE <<  "[" << _fd << "]"
@@ -19,6 +20,22 @@ Client::~Client() {
 int						Client::getFd() const { return _fd; }
 
 std::string const &		Client::getCmd() const { return _cmd; }
+
+bool	Client::haveData() {
+
+	if (_readBuffer.size())
+	{
+		_cmdSize = _readBuffer.find_first_of('\n');
+		if (_cmdSize == std::string::npos)
+		{
+			_cmdSize = _readBuffer.find('\r');
+			if (_cmdSize == std::string::npos)
+				return false;
+		}
+		return true;
+	}
+	return false;
+}
 
 int		Client::recv() {
 
@@ -32,8 +49,22 @@ int		Client::recv() {
 		return (0);
 
 	buffer[ret] = '\0';
-	_cmd.clear(); //?
-	_cmd += buffer;
+	_readBuffer += buffer;
+
 
 	return ret;
+}
+
+bool	Client::readFd() {
+
+	if (!haveData())
+		if (!recv())
+			return false;
+	if (haveData())
+	{
+		_cmd = _readBuffer.substr(0, _cmdSize + 1);
+		_readBuffer.erase(0, _cmdSize + 1);
+		return true;
+	}
+	return false;
 }
