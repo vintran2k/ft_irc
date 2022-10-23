@@ -12,6 +12,3 @@
 #include <map>
 #include <fcntl.h>
 #include "colors.hpp"
-
-class Server;
-class Client;
