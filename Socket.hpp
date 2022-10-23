@@ -7,7 +7,7 @@ class Socket {
 	public:
 		Socket();
 		Socket(int domain, int type, int protocol);
-		virtual ~Socket() throw();
+		virtual ~Socket();
 
 		int							getFd() const;
 		sockaddr_storage const &	getAddr() const;

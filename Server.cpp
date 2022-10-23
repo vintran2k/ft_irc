@@ -44,8 +44,10 @@ Server::Server(int port, std::string const & password) : _port(port), _password(
 
 Server::~Server() {
 
-	// delete clients
-	// close _fd
+	std::map<int, Client *>::iterator	it;
+
+	for(it = _clients.begin(); it != _clients.end(); it++)
+		delete it->second;
 }
 
 int									Server::getPort() const { return _port; }

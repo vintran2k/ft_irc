@@ -7,10 +7,10 @@ Socket::Socket(int domain, int type, int protocol) : _fd(-1) {
 	socket(domain, type, protocol);
 }
 
-Socket::~Socket() throw() {
+Socket::~Socket() {
 
-	if (_fd != -1)	// ?
-		close(_fd); // ?
+	if (_fd != -1)
+		close(_fd);
 }
 
 
