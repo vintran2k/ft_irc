@@ -9,7 +9,8 @@ class Client {
 		Client(int fd);
 		~Client();
 
-		int			getFd() const;
+		int						getFd() const;
+		std::string const &		getCmd() const;
 		int			recv();
 		// std::string		send();
 

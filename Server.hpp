@@ -28,6 +28,7 @@ class Server {
 		Socket						_socket;
 		std::map<int, Client *>		_clients;
 		fd_set						_readFds;
+		int							_fdMin;
 		int							_fdMax;
 
 		Server();

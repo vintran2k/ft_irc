@@ -5,7 +5,7 @@ Client::Client(int fd) : _fd(fd) {
 	std::cout
 	<< GRAY << "Client on socket "
 	<< BPURPLE <<  "[" << _fd << "]"
-	<< GREEN << "connected." << WHITE << std::endl;
+	<< GREEN << " connected." << WHITE << std::endl;
 }
 
 Client::~Client() {
@@ -13,10 +13,12 @@ Client::~Client() {
 	std::cout
 	<< GRAY << "Client on socket "
 	<< BPURPLE <<  "[" << _fd << "]"
-	<< RED << "disconnected." << WHITE << std::endl;
+	<< RED << " disconnected." << WHITE << std::endl;
 }
 
-int		Client::getFd() const { return _fd; }
+int						Client::getFd() const { return _fd; }
+
+std::string const &		Client::getCmd() const { return _cmd; }
 
 int		Client::recv() {
 
@@ -30,6 +32,7 @@ int		Client::recv() {
 		return (0);
 
 	buffer[ret] = '\0';
+	_cmd.clear(); //?
 	_cmd += buffer;
 
 	return ret;
