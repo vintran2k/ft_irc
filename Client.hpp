@@ -5,5 +5,20 @@
 class Client {
 
 	public:
+
+		Client(int fd);
+		~Client();
+
+		int			getFd() const;
+		int			recv();
+		// std::string		send();
+
 		
+	private:
+		int				_fd;
+		std::string 	_cmd;
+
+		Client();
+		Client(Client const & rhs);
+		Client &	operator=(Client const & rhs);
 };
