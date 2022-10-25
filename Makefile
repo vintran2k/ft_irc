@@ -2,7 +2,10 @@ NAME			=	ircserv
 SRCS			=	main.cpp		\
 					Socket.cpp		\
 					Server.cpp		\
-					Client.cpp
+					Client.cpp		\
+					Irc.cpp			\
+					User.cpp		\
+					ircUtils.cpp
 CC				=	@c++
 FLAGS			=	-Wall -Wextra -Werror -g
 OBJDIR			=	objs

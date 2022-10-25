@@ -1,13 +1,14 @@
 #pragma once
 
-#include "libs.hpp"
+#include "includes.hpp"
 #include "Socket.hpp"
 #include "Client.hpp"
-#define	MAX_CONNECTIONS		100
+#include "Irc.hpp"
 
 class Server {
 
 	public:
+
 		Server(int port, std::string const & password);
 		~Server();
 
@@ -16,13 +17,14 @@ class Server {
 		Socket const &						getSocket() const;
 		std::map<int, Client *> const &		getClients() const;
 
-		void	connectClient();
-		void	deleteClient(int const fd);
-		int		selectFd();
 		void	run();
 
 
 	private:
+
+		Server();
+		Server(Server const & rhs);
+		Server &	operator=(Server const & rhs);
 		int							_port;
 		std::string const			_password;
 		Socket						_socket;
@@ -30,8 +32,9 @@ class Server {
 		fd_set						_readFds;
 		int							_fdMin;
 		int							_fdMax;
+		Irc							_irc;
 
-		Server();
-		Server(Server const & rhs);
-		Server &	operator=(Server const & rhs);
+		void	connectClient();
+		void	deleteClient(int const fd);
+		int		selectFd();
 };

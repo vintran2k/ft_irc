@@ -1,9 +1,10 @@
 #include "Client.hpp"
 
-Client::Client(int fd) : _fd(fd), _cmdSize(std::string::npos) {
+Client::Client(int fd, std::string const & ip) : _fd(fd), _ip(ip) { //
 
 	std::cout
-	<< GRAY << "Client on socket "
+	<< BPURPLE << _ip //
+	<< GRAY << "\tClient on socket "
 	<< BPURPLE <<  "[" << _fd << "]"
 	<< GREEN << " connected." << WHITE << std::endl;
 }
@@ -12,7 +13,8 @@ Client::~Client() {
 
 	close(_fd);
 	std::cout
-	<< GRAY << "Client on socket "
+	<< BPURPLE << _ip //
+	<< GRAY << "\tClient on socket "
 	<< BPURPLE <<  "[" << _fd << "]"
 	<< RED << " disconnected." << WHITE << std::endl;
 }

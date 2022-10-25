@@ -1,6 +1,10 @@
 #include "Server.hpp"
 
-Server::Server(int port, std::string const & password) : _port(port), _password(password) {
+Server::Server(int port, std::string const & password) :
+	_port(port),
+	_password(password),
+	_irc(password)
+{
 
 	//	Create socket
 	_socket.socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
@@ -44,7 +48,7 @@ Server::Server(int port, std::string const & password) : _port(port), _password(
 
 Server::~Server() {
 
-	std::map<int, Client *>::iterator	it;
+	mapIt(int, Client *)	it;
 
 	for(it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
@@ -62,6 +66,7 @@ std::map<int, Client *> const &		Server::getClients() const { return _clients; }
 void	Server::connectClient() {
 
 	sockaddr_in	addr;
+	// sockaddr_storage    addr;
 	socklen_t	addrLen = 0;
 
 	int	fdClient = accept(_socket.getFd(), (sockaddr *)&addr, &addrLen);
@@ -69,7 +74,10 @@ void	Server::connectClient() {
 		throw std::runtime_error("accept() failed");
 
 	fcntl(fdClient, F_SETFL, O_NONBLOCK);
-	_clients.insert(std::make_pair(fdClient, new Client(fdClient)));
+
+	std::string	clientIp = inet_ntoa(((sockaddr_in *)&addr)->sin_addr); //
+	_clients.insert(std::make_pair(fdClient, new Client(fdClient, clientIp))); //
+	_irc.addUser(fdClient);
 }
 
 void	Server::deleteClient(int const fd) {
@@ -90,7 +98,7 @@ int		Server::selectFd() {
 	FD_ZERO(&_readFds);
 	FD_SET(fd, &_readFds);
 
-	std::map<int, Client *>::iterator	it;
+	mapIt(int, Client *)	it;
 	for (it = _clients.begin(); it != _clients.end(); it++)
 	{
 		fd = it->first;
@@ -126,12 +134,15 @@ void	Server::run() {
 					while (haveData)
 					{
 						if (_clients[fd]->readFd())
+						{
 							std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
-						// else		// sauf ctrlD
-						// {
-						// 	deleteClient(fd);
-						// 	break ;
-						// }
+							_irc.manageCommand(fd, _clients[fd]->getCmd());
+						}
+						else		// sauf ctrlD
+						{
+							deleteClient(fd);
+							break ;
+						}
 						haveData = _clients[fd]->haveData();
 					}
 				}
