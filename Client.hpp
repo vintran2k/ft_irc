@@ -14,7 +14,7 @@ class Client {
 
 		bool					readFd();
 		bool					haveData();
-		// std::string			send();
+		void					send(std::string const & data);
 
 		
 	private:

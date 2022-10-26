@@ -111,7 +111,7 @@ int		Server::selectFd() {
 	return (ret);
 }
 
-void	Server::recvAndMakeResponse(int fdsSelected) {
+void	Server::recvAndMakeReply(int fdsSelected) {
 
 	for (int fd = _fdMin; fd <= _fdMax && fdsSelected; fd++)
 	{
@@ -127,7 +127,7 @@ void	Server::recvAndMakeResponse(int fdsSelected) {
 					if (_clients[fd]->readFd())
 					{
 						// std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
-						_irc.getResponse(_serverResp, fd, _clients[fd]->getCmd());
+						_irc.getReply(_serverResp, fd, _clients[fd]->getCmd());
 					}
 					else		// sauf ctrlD
 					{
@@ -150,18 +150,20 @@ void	Server::run() {
 	{
 		//	recv
 		fdsSelected = selectFd();
-		recvAndMakeResponse(fdsSelected);
+		recvAndMakeReply(fdsSelected);
 		
 
 		//	send
 
-		vectorIt(t_response)	it;
+		vectorIt(t_reply)	it;
 		for (it = _serverResp.begin(); it != _serverResp.end(); it++)
 		{
 			int	fdClient = it->first;
 			if (_clients.find(fdClient) != _clients.end())
+			{
 				std::cout << "CLIENT = " << it->first << " CMD = " << it->second << std::endl;
-			// 	_clients[fdClient]->send
+				_clients[fdClient]->send(":" + it->second);
+			}
 		}
 		_serverResp.clear();
 	}

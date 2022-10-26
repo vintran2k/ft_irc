@@ -71,3 +71,9 @@ bool	Client::readFd() {
 	}
 	return false;
 }
+
+void	Client::send(std::string const & data) {
+
+	if (::send(_fd, data.c_str(), data.size(), 0) == -1)
+		throw std::runtime_error("send() failed");
+}

@@ -13,18 +13,21 @@
 #include <vector>
 #include <algorithm>
 #include <fcntl.h>
+#include <ctime>
 
+#include "replies.hpp"
 #include "colors.hpp"
 
 #define	MAX_CONNECTIONS		100
-#define HOST				ft_irc.fr
+#define SERVER_HOSTNAME		std::string("ft_irc.fr")
 
 #define vectorIt(type)					std::vector<type>::iterator
 #define mapIt(type1, type2)				std::map<type1, type2>::iterator
 
-typedef std::pair<int, std::string>		t_response;
+typedef std::pair<int, std::string>		t_reply;
 
-void	splitCmd(std::vector<std::string> & sCmd, std::string cmd);
+void				splitCmd(std::vector<std::string> & sCmd, std::string cmd);
+std::string const	getTime();
 
 
 // MSG

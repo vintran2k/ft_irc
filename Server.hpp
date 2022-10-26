@@ -31,10 +31,10 @@ class Server {
 		int							_fdMax;
 		std::string					_host;
 		Irc							_irc;
-		std::vector<t_response>		_serverResp;
+		std::vector<t_reply>		_serverResp;
 
 		void	connectClient();
 		void	deleteClient(int const fd);
 		int		selectFd();
-		void	recvAndMakeResponse(int fdsSelected);
+		void	recvAndMakeReply(int fdsSelected);
 };
