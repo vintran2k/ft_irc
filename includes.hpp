@@ -20,6 +20,7 @@
 
 #define	MAX_CONNECTIONS		100
 #define SERVER_HOSTNAME		std::string("ft_irc.fr")
+#define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
 #define vectorIt(type)					std::vector<type>::iterator
 #define mapIt(type1, type2)				std::map<type1, type2>::iterator

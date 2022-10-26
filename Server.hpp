@@ -31,7 +31,7 @@ class Server {
 		int							_fdMax;
 		std::string					_host;
 		Irc							_irc;
-		std::vector<t_reply>		_serverResp;
+		std::vector<t_reply>		_serverReply;
 
 		void	connectClient();
 		void	deleteClient(int const fd);

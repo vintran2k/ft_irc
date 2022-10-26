@@ -127,7 +127,7 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 					if (_clients[fd]->readFd())
 					{
 						// std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
-						_irc.getReply(_serverResp, fd, _clients[fd]->getCmd());
+						_irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
 					}
 					else		// sauf ctrlD
 					{
@@ -156,7 +156,7 @@ void	Server::run() {
 		//	send
 
 		vectorIt(t_reply)	it;
-		for (it = _serverResp.begin(); it != _serverResp.end(); it++)
+		for (it = _serverReply.begin(); it != _serverReply.end(); it++)
 		{
 			int	fdClient = it->first;
 			if (_clients.find(fdClient) != _clients.end())
@@ -165,6 +165,6 @@ void	Server::run() {
 				_clients[fdClient]->send(":" + it->second);
 			}
 		}
-		_serverResp.clear();
+		_serverReply.clear();
 	}
 }

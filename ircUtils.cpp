@@ -23,7 +23,7 @@ std::string const	getTime()
 	return (res);
 }
 
-// void	executeCmd(int clientFd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverResp) {
+// void	executeCmd(int clientFd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	
 // }

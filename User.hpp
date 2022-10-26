@@ -3,7 +3,6 @@
 #include "includes.hpp"
 #include "Client.hpp"
 
-#define VALIDCHAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
 class User {
 

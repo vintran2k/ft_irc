@@ -55,17 +55,20 @@ bool	Irc::manageCommand(std::vector<std::string> & sCmd, std::string & cmd) {
 	return false;
 }
 
-void	Irc::getReply(std::vector<t_reply> & serverreply, int fdClient, std::string cmd) {
+void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
 
 	std::vector<std::string>	sCmd;
+	std::string					reply;
 
-	// serverreply.clear();
+	// serverReply.clear();
 	if (manageCommand(sCmd, cmd) == false)
-		serverreply.push_back(std::make_pair(fdClient, std::string(WRONG_CMD(*sCmd.begin()))));
+		serverReply.push_back(std::make_pair(fdClient, std::string(WRONG_CMD(*sCmd.begin()))));
 	else
 	{
 		std::cout << RPL_WELCOME(_users[fdClient]->_nickName) << std::endl;
-		serverreply.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
+		serverReply.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
+		if (*sCmd.begin() == "NICK")
+			NICK(*_users[fdClient], sCmd, reply);
 	}
 }
 
@@ -102,14 +105,31 @@ void	Irc::MODE(User & user, std::vector<std::string> & sCmd, std::string & reply
 void	Irc::NAMES(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
 
-}
+}*/
 
 void	Irc::NICK(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
+	std::string	nickName;
+	std::string	validChar(VALIDCHAR);(void)user;//
 
+	if (sCmd.size() == 1)
+	{
+		reply = ERR_NONICKNAMEGIVEN;
+		return ;
+	}
+	nickName = *(sCmd.begin() + 1);
+	for (std::string::iterator it = nickName.begin(); it != nickName.end(); it++)
+		if (validChar.find(*it) == std::string::npos) {
+			reply = ERR_ERRONEUSNICKNAME(nickName);
+			return ;
+		}
+	if (nickName == user._nickName)
+		return ;
+	
+	
 }
 
-void	Irc::NOTICE(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+/*void	Irc::NOTICE(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
 
 }
