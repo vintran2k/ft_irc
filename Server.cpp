@@ -3,7 +3,7 @@
 Server::Server(int port, std::string const & password) :
 	_port(port),
 	_password(password),
-	_irc(password, _serverResp)
+	_irc(password)
 {
 
 	//	Create socket
@@ -127,7 +127,7 @@ void	Server::recvAndMakeResponse(int fdsSelected) {
 					if (_clients[fd]->readFd())
 					{
 						// std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
-						_irc.getResponse(fd, _clients[fd]->getCmd());
+						_irc.getResponse(_serverResp, fd, _clients[fd]->getCmd());
 					}
 					else		// sauf ctrlD
 					{

@@ -8,11 +8,11 @@ class Irc {
 
 	public:
 
-		Irc(std::string const & password, std::vector<t_response> & serverResp);
+		Irc(std::string const & password);
 		~Irc();
 
 		void	addUser(Client & client);
-		void	getResponse(int fdClient, std::string cmd);
+		void	getResponse(std::vector<t_response> & serverResp, int fdClient, std::string cmd);
 		bool	manageCommand(std::vector<std::string> & sCmd, std::string & cmd);
 
 		
@@ -25,5 +25,4 @@ class Irc {
 		std::string const				_password;
 		std::vector<std::string>		_cmds;
 		std::map<int, User *>			_users;
-		std::vector<t_response> &		_serverResp;
 };

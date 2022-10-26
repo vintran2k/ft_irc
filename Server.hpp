@@ -37,6 +37,4 @@ class Server {
 		void	deleteClient(int const fd);
 		int		selectFd();
 		void	recvAndMakeResponse(int fdsSelected);
-
-		friend class Irc;
 };

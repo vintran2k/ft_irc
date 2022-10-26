@@ -1,8 +1,6 @@
 #include "Irc.hpp"
 
-Irc::Irc(std::string const & password, std::vector<t_response> & serverResp) :
-	_password(password),
-	_serverResp(serverResp)
+Irc::Irc(std::string const & password) : _password(password)
 {
 
 	char const *	cmds[] =
@@ -57,15 +55,15 @@ bool	Irc::manageCommand(std::vector<std::string> & sCmd, std::string & cmd) {
 	return false;
 }
 
-void	Irc::getResponse(int fdClient, std::string cmd) {
+void	Irc::getResponse(std::vector<t_response> & serverResp, int fdClient, std::string cmd) {
 
 	std::vector<std::string>	sCmd;
 
-	// _serverResp.clear();
+	// serverResp.clear();
 	if (manageCommand(sCmd, cmd) == false)
-		_serverResp.push_back(std::make_pair(fdClient, std::string(WRONG_CMD(*sCmd.begin()))));
+		serverResp.push_back(std::make_pair(fdClient, std::string(WRONG_CMD(*sCmd.begin()))));
 	else
 	{
-		_serverResp.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
+		serverResp.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
 	}
 }
