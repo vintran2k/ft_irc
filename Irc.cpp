@@ -1,6 +1,9 @@
 #include "Irc.hpp"
 
-Irc::Irc(std::string const & password) : _password(password) {
+Irc::Irc(std::string const & password, std::vector<t_response> & serverResp) :
+	_password(password),
+	_serverResp(serverResp)
+{
 
 	char const *	cmds[] =
 	{
@@ -36,21 +39,33 @@ Irc::~Irc() {
 		delete it->second;
 }
 
-void	Irc::addUser(int fd) {
+void	Irc::addUser(Client & client) {
 
-	_users.insert(std::make_pair(fd, new User));
+	int	clientFd = client.getFd();
+
+	_users.insert(std::make_pair(clientFd, new User()));
+	if (_password.empty())
+		_users[clientFd]->_isPassOk = true;
 }
 
-void	Irc::manageCommand(int fdClient, std::string cmd) {
-
-	(void)fdClient;
-	std::vector<std::string>	sCmd;
+bool	Irc::manageCommand(std::vector<std::string> & sCmd, std::string & cmd) {
 
 	splitCmd(sCmd, cmd);
-	// for (vectorIt(std::string) it = sCmd.begin(); it != sCmd.end(); it++)
-		// std::cout << "|" << *it << "|" << std::endl;
 	
 	if (std::find(_cmds.begin(), _cmds.end(), *sCmd.begin()) != _cmds.end())
-		std::cout << GREEN << "VALID CMD" << WHITE <<std::endl;
+		return true;
+	return false;
+}
 
+void	Irc::getResponse(int fdClient, std::string cmd) {
+
+	std::vector<std::string>	sCmd;
+
+	// _serverResp.clear();
+	if (manageCommand(sCmd, cmd) == false)
+		_serverResp.push_back(std::make_pair(fdClient, std::string(WRONG_CMD(*sCmd.begin()))));
+	else
+	{
+		_serverResp.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
+	}
 }

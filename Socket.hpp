@@ -11,8 +11,6 @@ class Socket {
 		virtual ~Socket();
 
 		int							getFd() const;
-		sockaddr_storage const &	getAddr() const;
-		sa_family_t					getFamily() const;	//
 
 		void	socket(int domain, int type, int protocol);
 		void	bind(sockaddr const *addr, socklen_t len);

@@ -2,16 +2,18 @@
 
 #include "includes.hpp"
 #include "User.hpp"
+#include "Client.hpp"
 
 class Irc {
 
 	public:
 
-		Irc(std::string const & password);
+		Irc(std::string const & password, std::vector<t_response> & serverResp);
 		~Irc();
 
-		void	addUser(int fd);
-		void	manageCommand(int fdClient, std::string	cmd);
+		void	addUser(Client & client);
+		void	getResponse(int fdClient, std::string cmd);
+		bool	manageCommand(std::vector<std::string> & sCmd, std::string & cmd);
 
 		
 	private:
@@ -23,4 +25,5 @@ class Irc {
 		std::string const				_password;
 		std::vector<std::string>		_cmds;
 		std::map<int, User *>			_users;
+		std::vector<t_response> &		_serverResp;
 };

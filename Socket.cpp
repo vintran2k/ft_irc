@@ -16,9 +16,6 @@ Socket::~Socket() {
 
 int							Socket::getFd() const { return _fd; }
 
-sockaddr_storage const &	Socket::getAddr() const { return _addr; }
-
-sa_family_t					Socket::getFamily() const { return _addr.ss_family; }
 
 void	Socket::socket(int domain, int type, int protocol) {
 

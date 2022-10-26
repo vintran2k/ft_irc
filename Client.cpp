@@ -1,6 +1,7 @@
 #include "Client.hpp"
 
-Client::Client(int fd, std::string const & ip) : _fd(fd), _ip(ip) { //
+Client::Client(int fd, std::string const & ip) : _fd(fd), _ip(ip)
+{ 
 
 	std::cout
 	<< BPURPLE << _ip //

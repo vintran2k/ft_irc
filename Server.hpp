@@ -12,10 +12,7 @@ class Server {
 		Server(int port, std::string const & password);
 		~Server();
 
-		int									getPort() const;
-		std::string const &					getPassword() const;
-		Socket const &						getSocket() const;
-		std::map<int, Client *> const &		getClients() const;
+		int		getPort() const;
 
 		void	run();
 
@@ -32,9 +29,14 @@ class Server {
 		fd_set						_readFds;
 		int							_fdMin;
 		int							_fdMax;
+		std::string					_host;
 		Irc							_irc;
+		std::vector<t_response>		_serverResp;
 
 		void	connectClient();
 		void	deleteClient(int const fd);
 		int		selectFd();
+		void	recvAndMakeResponse(int fdsSelected);
+
+		friend class Irc;
 };

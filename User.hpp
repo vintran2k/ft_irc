@@ -1,6 +1,7 @@
 #pragma once
 
 #include "includes.hpp"
+#include "Client.hpp"
 
 #define VALIDCHAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
@@ -20,5 +21,8 @@ class User {
 		std::string				_nickName;
 		std::string				_userName;
 		std::string				_realName;
+		bool					_isPassOk;
 		bool					_operator;
+
+		friend class Irc;
 };
