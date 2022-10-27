@@ -19,8 +19,12 @@ class User {
 
 		std::string				_nickName;
 		std::string				_userName;
+		std::string				_hostName;
+		std::string				_serverName;
 		std::string				_realName;
+
 		bool					_isPassOk;
+		bool					_isRegister;
 		bool					_operator;
 
 		friend class Irc;

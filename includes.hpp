@@ -19,7 +19,6 @@
 #include "colors.hpp"
 
 #define	MAX_CONNECTIONS		100
-#define SERVER_HOSTNAME		std::string("ft_irc.fr")
 #define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
 #define vectorIt(type)					std::vector<type>::iterator

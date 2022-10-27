@@ -161,8 +161,8 @@ void	Server::run() {
 			int	fdClient = it->first;
 			if (_clients.find(fdClient) != _clients.end())
 			{
-				std::cout << "CLIENT = " << it->first << " CMD = " << it->second << std::endl;
-				_clients[fdClient]->send(":" + it->second);
+				std::cout << "SEND = " << it->second << std::endl;
+				_clients[fdClient]->send(it->second);
 			}
 		}
 		_serverReply.clear();
