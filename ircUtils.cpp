@@ -6,7 +6,7 @@ void	splitCmd(std::vector<std::string> & sCmd, std::string cmd) {
 	std::string				delimiter = " \n\r";
 	std::string::iterator	it;
 	
-	while (pos < cmd.size() && (pos = cmd.find_first_of(delimiter)) != std::string::npos)
+	while ((pos = cmd.find_first_of(delimiter)) != std::string::npos)
 	{
 		sCmd.push_back(cmd.substr(0, pos));
 		for (it = cmd.begin() + pos; it != cmd.end() && delimiter.find(*it) != std::string::npos; it++)

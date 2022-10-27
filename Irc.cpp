@@ -2,6 +2,18 @@
 
 Irc::Irc(std::string const & password) : _password(password), _startTime(getTime())
 {
+	_initCmds();
+}
+
+Irc::~Irc() {
+
+	mapIt(int, User *)	it;
+
+	for(it = _users.begin(); it != _users.end(); it++)
+		delete it->second;
+}
+
+void	Irc::_initCmds() {
 
 	_cmdNames[0] = "INVITE";
 	_cmdNames[1] = "JOIN";
@@ -21,18 +33,6 @@ Irc::Irc(std::string const & password) : _password(password), _startTime(getTime
 	_cmdNames[15] = "TOPIC";
 	_cmdNames[16] = "USER";
 	_cmdNames[17] = "WHO";
-	_initCmds();
-}
-
-Irc::~Irc() {
-
-	mapIt(int, User *)	it;
-
-	for(it = _users.begin(); it != _users.end(); it++)
-		delete it->second;
-}
-
-void	Irc::_initCmds() {
 
 	_cmds[0] = &Irc::_INVITE;
 	_cmds[1] = &Irc::_JOIN;
@@ -90,6 +90,7 @@ void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	int							cmdIndex;
 	bool						isRegisterBefore;
 
+	std::cout << BCYAN << "RECV -->" << cmd << WHITE << std::endl;
 	splitCmd(sCmd, cmd);
 	user = _users[fdClient];
 	cmdIndex = _findCommand(sCmd[0]);
@@ -99,16 +100,14 @@ void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	{
 		isRegisterBefore = user->_isRegister;
 		(this->*_cmds[cmdIndex])(*user, sCmd, reply);
+		serverReply.push_back(std::make_pair(fdClient, reply));
 		if (!isRegisterBefore && user->_isRegister)
 		{
 			serverReply.push_back(std::make_pair(fdClient, RPL_WELCOME(user->_nickName, user->_userName, user->_hostName)));
 			serverReply.push_back(std::make_pair(fdClient, RPL_YOURHOST(user->_nickName)));
 			serverReply.push_back(std::make_pair(fdClient, RPL_CREATED(user->_nickName, _startTime)));
 		}
-		// std::cout << RPL_WELCOME(nickName) << std::endl;
-		// serverReply.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
 	}
-	// std::cout << sCmd[0] << std::endl;
 }
 
 
@@ -166,22 +165,25 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & repl
 	std::string	nickName;
 	std::string	validChar(VALIDCHAR);(void)user;//
 
+	for (vectorIt(std::string) it = sCmd.begin(); it != sCmd.end(); it++)
+		std::cout << YELLOW << *it << WHITE << std::endl;
+
 	if (sCmd.size() == 1)
 	{
-		reply = ERR_NONICKNAMEGIVEN(nickName);
+		reply = ERR_NONICKNAMEGIVEN(user._nickName);
 		return ;
 	}
 	nickName = sCmd[1];
 	for (std::string::iterator it = nickName.begin(); it != nickName.end(); it++)
 		if (validChar.find(*it) == std::string::npos) {
-			reply = ERR_ERRONEUSNICKNAME(nickName);
+			reply = ERR_ERRONEUSNICKNAME(user._nickName, nickName);
 			return ;
 		}
 	if (nickName == user._nickName)
 		return ;
 	if (_findUser(nickName))
 	{
-		reply = ERR_NICKNAMEINUSE(nickName);
+		reply = ERR_NICKNAMEINUSE(user._nickName, nickName);
 		return ;
 	}
 
@@ -215,11 +217,12 @@ void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::string & repl
 
 void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
+	// ajouter condition
 	if (user._isPassOk)
 		reply = ERR_ALREADYREGISTRED(user._nickName);
 	else if (sCmd.size() == 1)
 		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
-	else if (sCmd[0] == _password)
+	else if (sCmd[1] == _password)
 		user._isPassOk = true;
 }
 
