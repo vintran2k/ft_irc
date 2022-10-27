@@ -257,9 +257,15 @@ void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::string & rep
 void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
 	if (sCmd.size() < 5)
+	{
 		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+		return ;
+	}
 	if (user._isRegister == true)
+	{
 		reply = ERR_ALREADYREGISTRED(user._nickName);
+		return ;
+	}
 
 	user._nickName = sCmd[1];
 	user._hostName = sCmd[2];
