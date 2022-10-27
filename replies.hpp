@@ -8,13 +8,13 @@
 
 
 //	001
-#define RPL_WELCOME(nick)					REPLY_PREFIX("001", nick) + "Welcome to the ft_irc Network, " + nick + CLRF
+#define RPL_WELCOME(nick, user, host)		REPLY_PREFIX("001", nick) + "Welcome to the ft_irc Network, " + nick + "!" + user + "@" + host + CLRF
 
 //	002
-#define RPL_YOURHOST(nick)					REPLY_PREFIX("002", nick) + "Your host is " + SERVER_HOSTNAME + ", running version 1.0" + CLRF
+#define RPL_YOURHOST(nick)					REPLY_PREFIX("002", nick) + "Your host is " + SERVER_HOSTNAME + ", running version ecole-4.2" + CLRF
 
 //	003
-#define RPL_CREATED(nick, datetime)			REPLY_PREFIX("003", nick) + "This server was created" + datetime + CLRF
+#define RPL_CREATED(nick, datetime)			REPLY_PREFIX("003", nick) + "This server was created " + datetime + CLRF
 
 //	004
 // #define RPL_MYINFO(nick)			

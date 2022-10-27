@@ -86,17 +86,25 @@ void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 
 	std::vector<std::string>	sCmd;
 	std::string					reply;
-	std::string					nickName;
+	User *						user;
 	int							cmdIndex;
+	bool						isRegisterBefore;
 
 	splitCmd(sCmd, cmd);
-	nickName = _users[fdClient]->_nickName;
+	user = _users[fdClient];
 	cmdIndex = _findCommand(sCmd[0]);
 	if (cmdIndex == -1)
-		serverReply.push_back(std::make_pair(fdClient, ERR_UNKNOWNCOMMAND(nickName, *sCmd.begin())));
+		serverReply.push_back(std::make_pair(fdClient, ERR_UNKNOWNCOMMAND(user->_nickName, *sCmd.begin())));
 	else
 	{
-		(this->*_cmds[cmdIndex])(*_users[fdClient], sCmd, reply);
+		isRegisterBefore = user->_isRegister;
+		(this->*_cmds[cmdIndex])(*user, sCmd, reply);
+		if (!isRegisterBefore && user->_isRegister)
+		{
+			serverReply.push_back(std::make_pair(fdClient, RPL_WELCOME(user->_nickName, user->_userName, user->_hostName)));
+			serverReply.push_back(std::make_pair(fdClient, RPL_YOURHOST(user->_nickName)));
+			serverReply.push_back(std::make_pair(fdClient, RPL_CREATED(user->_nickName, _startTime)));
+		}
 		// std::cout << RPL_WELCOME(nickName) << std::endl;
 		// serverReply.push_back(std::make_pair(fdClient, std::string(GOOD_CMD(*sCmd.begin()))));
 	}
