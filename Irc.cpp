@@ -218,10 +218,10 @@ void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::string & repl
 void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
 	// ajouter condition
-	if (user._isPassOk)
-		reply = ERR_ALREADYREGISTRED(user._nickName);
-	else if (sCmd.size() == 1)
+	if (sCmd.size() == 1)
 		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+	else if (user._isPassOk)
+		reply = ERR_ALREADYREGISTRED(user._nickName);
 	else if (sCmd[1] == _password)
 		user._isPassOk = true;
 }
