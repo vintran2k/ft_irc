@@ -24,6 +24,8 @@ int						Client::getFd() const { return _fd; }
 
 std::string const &		Client::getCmd() const { return _cmd; }
 
+std::string const &		Client::getReadBuffer() const { return _readBuffer; }
+
 bool	Client::haveData() {
 
 	if (_readBuffer.size())

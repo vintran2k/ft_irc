@@ -11,6 +11,7 @@ class Client {
 
 		int						getFd() const;
 		std::string const &		getCmd() const;
+		std::string const &		getReadBuffer() const;
 
 		bool					readFd();
 		bool					haveData();

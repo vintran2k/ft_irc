@@ -7,12 +7,18 @@ Server::Server(int port, std::string const & password) :
 {
 
 	//	Create socket
-	_socket.socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
+	int	opt = 1;
+#ifdef __APPLE__
+	_socket.socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	fcntl(_socket.getFd(), F_SETFL, O_NONBLOCK);
 
-	//	Set options for TCP server socket
-	int opt = 1;
+	if (setsockopt(_socket.getFd(), SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int)) == -1)
+		throw std::runtime_error("setsockopt() failed");
+#else
+	_socket.socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 	if (setsockopt(_socket.getFd(), SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int)) == -1)
 		throw std::runtime_error("setsockopt() failed");
+#endif
 
 	//	Assign an address to the socket
 	sockaddr_in	addr;
@@ -111,7 +117,7 @@ int		Server::selectFd() {
 	return (ret);
 }
 
-void	Server::recvAndMakeReply(int fdsSelected) {
+void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 
 	for (int fd = _fdMin; fd <= _fdMax && fdsSelected; fd++)
 	{
@@ -122,20 +128,23 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 			else
 			{
 				bool	haveData = true;
+				bool	isRead = false;
+				bool	disconnect = false;
 				while (haveData)
 				{
-					if (_clients[fd]->readFd())
+					isRead = _clients[fd]->readFd();
+					if (isRead)
+						disconnect = _irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
+					else if (_clients[fd]->getReadBuffer().empty())	// sauf ctrlD
 					{
-						// std::cout << BLUE <<  "CMD = " << _clients[fd]->getCmd() << WHITE << std::endl;
-						_irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
-					}
-					else		// sauf ctrlD
-					{
+						_irc.deleteUser(fd);
 						deleteClient(fd);
 						break ;
 					}
 					haveData = _clients[fd]->haveData();
 				}
+				if (disconnect)
+					clientsOFF.push_back(fd);
 			}
 			fdsSelected--;
 		}
@@ -145,12 +154,13 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 void	Server::run() {
 
 	int	fdsSelected;
+	std::vector<int>	clientsOFF;
 
 	while (1)
 	{
 		//	recv
 		fdsSelected = selectFd();
-		recvAndMakeReply(fdsSelected);
+		recvAndMakeReply(fdsSelected, clientsOFF);
 		
 
 		//	send
@@ -165,6 +175,11 @@ void	Server::run() {
 				_clients[fdClient]->send(it->second);
 			}
 		}
+
+		for (vectorIt(int) it = clientsOFF.begin(); it != clientsOFF.end(); it++)
+			deleteClient(*it);
+
 		_serverReply.clear();
+		clientsOFF.clear();
 	}
 }

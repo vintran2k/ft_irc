@@ -63,6 +63,16 @@ void	Irc::addUser(Client & client) {
 		_users[clientFd]->_isPassOk = true;
 }
 
+void	Irc::deleteUser(int const fd) {
+
+	if (_users.find(fd) != _users.end())
+	{
+		// if _users[userFd]->_isRegister
+		delete _users[fd];
+		_users.erase(fd);
+	}
+}
+
 User *	Irc::_findUser(std::string nickname) {
 
 	mapIt(int, User *)	it;
@@ -82,7 +92,7 @@ int		Irc::_findCommand(std::string & cmd) {
 	return -1;
 }
 
-void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
+bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
 
 	std::vector<std::string>	sCmd;
 	std::string					reply;
@@ -100,7 +110,10 @@ void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	{
 		isRegisterBefore = user->_isRegister;
 		(this->*_cmds[cmdIndex])(*user, sCmd, reply);
-		serverReply.push_back(std::make_pair(fdClient, reply));
+		if (!reply.empty())
+			serverReply.push_back(std::make_pair(fdClient, reply));
+		if (sCmd[0] == "QUIT" || !user->_isPassOk)
+			return true;
 		if (!isRegisterBefore && user->_isRegister)
 		{
 			serverReply.push_back(std::make_pair(fdClient, RPL_WELCOME(user->_nickName, user->_userName, user->_hostName)));
@@ -108,6 +121,7 @@ void	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 			serverReply.push_back(std::make_pair(fdClient, RPL_CREATED(user->_nickName, _startTime)));
 		}
 	}
+	return false;
 }
 
 
@@ -190,7 +204,7 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & repl
 	//if (user._isRegister == true)
 		//
 	user._nickName = nickName;
-	if (user._userName.size())
+	if (!user._userName.empty() && user._isPassOk)
 		user._isRegister = true;
 }
 
@@ -272,7 +286,7 @@ void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::string & repl
 	user._serverName = sCmd[3];
 	user._realName = sCmd[4];
 
-	if (user._nickName.size())
+	if (user._nickName.size() && user._isPassOk)
 		user._isRegister = true;
 }
 

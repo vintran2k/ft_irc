@@ -36,5 +36,5 @@ class Server {
 		void	connectClient();
 		void	deleteClient(int const fd);
 		int		selectFd();
-		void	recvAndMakeReply(int fdsSelected);
+		void	recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF);
 };

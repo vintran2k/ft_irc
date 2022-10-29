@@ -12,7 +12,8 @@ class Irc {
 		~Irc();
 
 		void	addUser(Client & client);
-		void	getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd);
+		void	deleteUser(int const fd);
+		bool	getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd);
 
 
 	private:
