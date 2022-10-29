@@ -7,7 +7,7 @@ SRCS			=	main.cpp		\
 					User.cpp		\
 					ircUtils.cpp
 CC				=	@c++
-FLAGS			=	-Wall -Wextra -Werror -g
+FLAGS			=	-Wall -Wextra -Werror -std=c++98 -g
 OBJDIR			=	objs
 OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 

@@ -19,3 +19,11 @@
 #define BBLUE "\033[1;34m"
 #define BPURPLE "\033[1;35m"
 #define BCYAN "\033[1;36m"
+
+#define BIWHITE "\033[1;97m"
+#define BIRED "\033[1;91m"
+#define BIGREEN "\033[1;92m"
+#define BIYELLOW "\033[1;93m"
+#define BIBLUE "\033[1;94m"
+#define BIPURPLE "\033[1;95m"
+#define BICYAN "\033[1;96m"

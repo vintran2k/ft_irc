@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <fcntl.h>
 #include <ctime>
+#include <signal.h>
 
 #include "replies.hpp"
 #include "colors.hpp"
@@ -28,8 +29,3 @@ typedef std::pair<int, std::string>		t_reply;
 
 void				splitCmd(std::vector<std::string> & sCmd, std::string cmd);
 std::string const	getTime();
-
-
-// MSG
-#define WRONG_CMD(cmd)					std::string(cmd + ": Unknown command")
-#define GOOD_CMD(cmd)					std::string(cmd + ": Good command")

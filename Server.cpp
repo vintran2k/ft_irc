@@ -30,9 +30,7 @@ Server::Server(int port, std::string const & password) :
 	//	Listen for connections
 	_socket.listen(MAX_CONNECTIONS);
 
-
-	std::cout << RED << _host << WHITE << std::endl;
-	std::cout																			<< BYELLOW
+	std::cout																			<< BIBLUE
 	<<	"																			" 	<< std::endl
 	<<	"	                   ,----,												"	<< std::endl
 	<<	"	                 ,/   .`|												"	<< std::endl
@@ -49,8 +47,8 @@ Server::Server(int port, std::string const & password) :
 	<<	"	|   :  \\       '---'    .'  .'   : ;   |.'  :   : :-'   |   :    /		"	<< std::endl
 	<<	"	|   | ,'             ,---, '   .'  '---'    |   |.'      \\   \\ .'		"	<< std::endl
 	<<	"	`----'               ;   |  .'              `---'         `---`			"	<< std::endl
-	<<	"	                     `---'												"	<< std::endl
-	<<	BGREEN << "\n\nServer started on " << inet_ntoa(addr.sin_addr) << ":" << port << WHITE << std::endl;
+	<<	"	                     `---'											\n\n"	<< std::endl
+	<< CYAN << "[" << getTime() << "]" << "\t" << BIGREEN << "Server listening on port " << port << "\n" << WHITE << std::endl;
 
 }
 
@@ -60,6 +58,8 @@ Server::~Server() {
 
 	for(it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
+
+	std::cout << CYAN << "[" << getTime() << "]" << "\t" << BIGREEN << "Server stopped" << WHITE << std::endl;
 }
 
 int		Server::getPort() const { return _port; }

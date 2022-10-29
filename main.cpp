@@ -1,6 +1,8 @@
 #include "includes.hpp"
 #include "Server.hpp"
 
+Server	*IrcServer = NULL;
+
 bool	agrsParsing(int ac, char **av, int &port, std::string &password) {
 
 	if (ac != 3)
@@ -21,6 +23,20 @@ bool	agrsParsing(int ac, char **av, int &port, std::string &password) {
 	return true;
 }
 
+void	signalExit(int sig) {
+
+	if (sig == SIGINT || sig == SIGQUIT)
+	{
+		if (IrcServer)
+		{
+			std::cout << "\b\b";
+			delete IrcServer;
+		}
+		exit(0);
+	}
+}
+
+
 int	main(int ac, char **av) {
 
 	int				port;
@@ -29,11 +45,15 @@ int	main(int ac, char **av) {
 	if (!agrsParsing(ac, av, port, password))
 		return 1;
 
+	signal(SIGINT, signalExit);
+	signal(SIGQUIT, signalExit);
+
 	try
 	{
-		Server	IrcServer(port, password);
+		IrcServer = new Server(port, password);
 
-		IrcServer.run();
+		IrcServer->run();
+		delete IrcServer;
 	}
 	catch (std::exception & e) {
 		std::cerr << BRED << e.what() << WHITE << std::endl;

@@ -15,15 +15,11 @@ void	splitCmd(std::vector<std::string> & sCmd, std::string cmd) {
 	}
 }
 
-std::string const	getTime()
-{
+std::string const	getTime() {
+
 	time_t	t(time(NULL));
 	std::string	res(ctime(&t));
+	res.erase(res.end() - 1);
 	
 	return (res);
 }
-
-// void	executeCmd(int clientFd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
-
-	
-// }
