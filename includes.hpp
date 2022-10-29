@@ -24,6 +24,7 @@
 
 #define vectorIt(type)					std::vector<type>::iterator
 #define mapIt(type1, type2)				std::map<type1, type2>::iterator
+#define LOGPREFIX                       CYAN << "[" << getTime() << "]" << "\t"
 
 typedef std::pair<int, std::string>		t_reply;
 

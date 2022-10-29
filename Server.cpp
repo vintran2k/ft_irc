@@ -48,7 +48,7 @@ Server::Server(int port, std::string const & password) :
 	<<	"	|   | ,'             ,---, '   .'  '---'    |   |.'      \\   \\ .'		"	<< std::endl
 	<<	"	`----'               ;   |  .'              `---'         `---`			"	<< std::endl
 	<<	"	                     `---'											\n\n"	<< std::endl
-	<< CYAN << "[" << getTime() << "]" << "\t" << BIGREEN << "Server listening on port " << port << "\n" << WHITE << std::endl;
+	<< LOGPREFIX << BIGREEN << "Server listening on port " << port << "\n" << WHITE << std::endl;
 
 }
 
@@ -59,7 +59,7 @@ Server::~Server() {
 	for(it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
 
-	std::cout << CYAN << "[" << getTime() << "]" << "\t" << BIGREEN << "Server stopped" << WHITE << std::endl;
+	std::cout << LOGPREFIX << BIGREEN << "Server stopped" << WHITE << std::endl;
 }
 
 int		Server::getPort() const { return _port; }

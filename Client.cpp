@@ -3,21 +3,21 @@
 Client::Client(int fd, std::string const & ip) : _fd(fd), _ip(ip)
 { 
 
-	std::cout
+	std::cout << LOGPREFIX
 	<< BPURPLE << _ip //
 	<< GRAY << "\tClient on socket "
-	<< BPURPLE <<  "[" << _fd << "]"
-	<< GREEN << " connected." << WHITE << std::endl;
+	<< BIPURPLE <<  "[" << _fd << "]"
+	<< GREEN << " connected\n" << WHITE << std::endl;
 }
 
 Client::~Client() {
 
 	close(_fd);
-	std::cout
+	std::cout << LOGPREFIX
 	<< BPURPLE << _ip //
 	<< GRAY << "\tClient on socket "
-	<< BPURPLE <<  "[" << _fd << "]"
-	<< RED << " disconnected." << WHITE << std::endl;
+	<< BIPURPLE <<  "[" << _fd << "]"
+	<< RED << " disconnected\n" << WHITE << std::endl;
 }
 
 int						Client::getFd() const { return _fd; }
