@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <map>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <fcntl.h>
 #include <ctime>
@@ -34,5 +35,5 @@ typedef std::pair<int, std::string>		t_reply;
 #define ADMIN_USERNAME    "admin"
 #define ADMIN_PASSWORD    "adminPass"
 
-void				splitCmd(std::vector<std::string> & sCmd, std::string cmd);
+void                split(std::vector<std::string> & res, std::string str, std::string const & delimiter);
 std::string const	getTime();

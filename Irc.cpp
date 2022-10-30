@@ -101,7 +101,9 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	bool						isRegisterBefore;
 
 	std::cout << BCYAN << "RECV -->" << cmd << WHITE << std::endl;
-	splitCmd(sCmd, cmd);
+	split(sCmd, cmd, " \n\r");
+	if (sCmd[0].empty())
+		return false;
 	user = _users[fdClient];
 	cmdIndex = _findCommand(sCmd[0]);
 	if (cmdIndex == -1)
@@ -137,6 +139,23 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 	(void)user;
 	(void)sCmd;
 	(void)reply;
+
+	std::vector<std::string>	channels, keys;
+
+	if (sCmd.size() < 2)
+	{
+		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+		return ;
+	}
+	split(channels, sCmd[1], ",");
+	
+	for (vectorIt(std::string) it = channels.begin(); it != channels.end(); it++)
+	{
+		if ((*it)[0] != '#' || (*it).find_first_of(" \a,") != std::string::npos)
+			reply += ERR_NOSUCHCHANNEL(user._nickName, *it);
+	}
+	
+
 }
 
 void	Irc::_KICK(User & user, std::vector<std::string> & sCmd, std::string & reply) {
@@ -174,13 +193,10 @@ void	Irc::_NAMES(User & user, std::vector<std::string> & sCmd, std::string & rep
 	(void)reply;
 }
 
-void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & reply) { //	username ne change pas dans hexchat
 
 	std::string	nickName;
 	std::string	validChar(VALIDCHAR);(void)user;//
-
-	for (vectorIt(std::string) it = sCmd.begin(); it != sCmd.end(); it++)
-		std::cout << YELLOW << *it << WHITE << std::endl;
 
 	if (sCmd.size() == 1)
 	{
@@ -203,6 +219,7 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & repl
 
 	//if (user._isRegister == true)
 		//
+	
 	user._nickName = nickName;
 	if (!user._userName.empty() && user._isPassOk)
 		user._isRegister = true;

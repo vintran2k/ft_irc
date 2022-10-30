@@ -4,7 +4,7 @@
 
 #define CLRF							"\r\n"
 #define SERVER_HOSTNAME					std::string("ft_irc.fr")
-#define RPL_PREFIX(code, nick)		std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick + " ")
+#define RPL_PREFIX(code, nick)		std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick + " :")
 
 
 //	001
@@ -21,15 +21,18 @@
 
 
 //  381
-#define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + ":You are now an IRC operator" + CLRF
+#define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + "You are now an IRC operator" + CLRF
+
+//	403
+#define ERR_NOSUCHCHANNEL(nick, chan)			RPL_PREFIX("403", nick) + chan + " :No such channel" + CLRF
 
 //	421
 #define ERR_UNKNOWNCOMMAND(nick, command)		RPL_PREFIX("421", nick) + command + " :Unknown command" + CLRF
 
 //	431
-#define ERR_NONICKNAMEGIVEN(nick)				RPL_PREFIX("431", nick) + ":No nickname given" + CLRF
+#define ERR_NONICKNAMEGIVEN(nick)				RPL_PREFIX("431", nick) + "No nickname given" + CLRF
 
-//432
+//	432
 #define ERR_ERRONEUSNICKNAME(nick, errNick)		RPL_PREFIX("432", nick) + errNick + " :Erroneous nickname" + CLRF
 
 //	433
@@ -39,8 +42,8 @@
 #define ERR_NEEDMOREPARAMS(nick, cmd)			RPL_PREFIX("461", nick) + cmd + " :Not enough parameters" + CLRF
 
 //	462
-#define ERR_ALREADYREGISTRED(nick)				RPL_PREFIX("462", nick) + ":Unauthorized command (already registered)" + CLRF
+#define ERR_ALREADYREGISTRED(nick)				RPL_PREFIX("462", nick) + "Unauthorized command (already registered)" + CLRF
 
 //  464
-#define ERR_PASSWDMISMATCH(nick)				RPL_PREFIX("464", nick) + ":Password incorrect" + CLRF
+#define ERR_PASSWDMISMATCH(nick)				RPL_PREFIX("464", nick) + "Password incorrect" + CLRF
 

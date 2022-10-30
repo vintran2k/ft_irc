@@ -1,17 +1,19 @@
 #include "includes.hpp"
 
-void	splitCmd(std::vector<std::string> & sCmd, std::string cmd) {
+void	split(std::vector<std::string> & res, std::string str, std::string const & delimiter) {
 
 	size_t					pos = 0;
-	std::string				delimiter = " \n\r";
 	std::string::iterator	it;
 	
-	while ((pos = cmd.find_first_of(delimiter)) != std::string::npos)
+	while (str.size())
 	{
-		sCmd.push_back(cmd.substr(0, pos));
-		for (it = cmd.begin() + pos; it != cmd.end() && delimiter.find(*it) != std::string::npos; it++)
+		pos = str.find_first_of(delimiter);
+		if (pos == std::string::npos)
+			pos = str.size();
+		res.push_back(str.substr(0, pos));
+		for (it = str.begin() + pos; it != str.end() && delimiter.find(*it) != std::string::npos; it++)
 			pos++;
-		cmd.erase(0, pos);
+		str.erase(0, pos);
 	}
 }
 

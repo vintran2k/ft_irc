@@ -5,7 +5,8 @@ SRCS			=	main.cpp		\
 					Client.cpp		\
 					Irc.cpp			\
 					User.cpp		\
-					ircUtils.cpp
+					ircUtils.cpp	\
+					Channel.cpp
 CC				=	@c++
 FLAGS			=	-Wall -Wextra -Werror -std=c++98 -g
 OBJDIR			=	objs

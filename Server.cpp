@@ -143,7 +143,7 @@ void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 					}
 					haveData = _clients[fd]->haveData();
 				}
-				if (disconnect) 
+				if (disconnect)
 					clientsOFF.push_back(fd);
 			}
 			fdsSelected--;

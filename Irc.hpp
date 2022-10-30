@@ -3,6 +3,7 @@
 #include "includes.hpp"
 #include "User.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 
 class Irc {
 
@@ -22,11 +23,12 @@ class Irc {
 		Irc(Irc const & rhs);
 		Irc &	operator=(Irc const & rhs);
 
-		std::string const				_password;
-		std::string						_cmdNames[18];
-		void							(Irc::*_cmds[18])(User & user, std::vector<std::string> & sCmd, std::string & reply);
-		std::map<int, User *>			_users;
-		std::string const				_startTime;
+		std::string const					_password;
+		std::string							_cmdNames[18];
+		void								(Irc::*_cmds[18])(User & user, std::vector<std::string> & sCmd, std::string & reply);
+		std::map<int, User *>				_users;
+		std::map<std::string, Channel *>	_channels;
+		std::string const					_startTime;
 
 		void	_initCmds();
 		int		_findCommand(std::string & cmd);
