@@ -7,10 +7,13 @@ Irc::Irc(std::string const & password) : _password(password), _startTime(getTime
 
 Irc::~Irc() {
 
-	mapIt(int, User *)	it;
+	mapIt(int, User *)	uIt;
+	mapIt(std::string, Channel *) cIt;
 
-	for(it = _users.begin(); it != _users.end(); it++)
-		delete it->second;
+	for (uIt = _users.begin(); uIt != _users.end(); uIt++)
+		delete uIt->second;
+	for (cIt = _channels.begin(); cIt != _channels.end(); cIt++)
+		delete cIt->second;
 }
 
 void	Irc::_initCmds() {
@@ -73,7 +76,7 @@ void	Irc::deleteUser(int const fd) {
 	}
 }
 
-User *	Irc::_findUser(std::string nickname) {
+User *	Irc::_findUser(std::string const & nickname) {
 
 	mapIt(int, User *)	it;
 	for (it = _users.begin(); it != _users.end(); it++)
@@ -82,6 +85,22 @@ User *	Irc::_findUser(std::string nickname) {
 			return it->second;
 	}
 	return NULL;
+}
+
+Channel *	Irc::_findChannel(std::string const & name) {
+
+	mapIt(std::string, Channel *)	it;
+
+	it = _channels.find(name);
+	if (it != _channels.end())
+		return it->second;
+	else
+		return NULL;
+}
+
+void		Irc::_addNewChannel(std::string const & name, User * user) {
+
+	_channels.insert(std::make_pair(name, new Channel(name, user)));
 }
 
 int		Irc::_findCommand(std::string & cmd) {
@@ -151,10 +170,24 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 	
 	for (vectorIt(std::string) it = channels.begin(); it != channels.end(); it++)
 	{
+		bool	valid = true;
+
 		if ((*it)[0] != '#' || (*it).find_first_of(" \a,") != std::string::npos)
+		{
 			reply += ERR_NOSUCHCHANNEL(user._nickName, *it);
+			valid = false;
+		}
+		if (valid)
+		{
+			// Channel *	channel = _findChannel(*it);
+			// if (channel)
+			// 	//join
+			// else
+			// 	_addNewChannel(*it, &user);
+		}
+
 	}
-	
+
 
 }
 

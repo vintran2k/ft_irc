@@ -30,9 +30,11 @@ class Irc {
 		std::map<std::string, Channel *>	_channels;
 		std::string const					_startTime;
 
-		void	_initCmds();
-		int		_findCommand(std::string & cmd);
-		User *	_findUser(std::string nickname);
+		void		_initCmds();
+		int			_findCommand(std::string & cmd);
+		User *		_findUser(std::string const & nickname);
+		Channel *	_findChannel(std::string const & name);
+		void		_addNewChannel(std::string const & name, User * user);
 
 		void	_INVITE(User & user, std::vector<std::string> & sCmd, std::string & reply);
 		void	_JOIN(User & user, std::vector<std::string> & sCmd, std::string & reply);
