@@ -11,6 +11,7 @@ class Channel {
 
 		Channel(std::string const & name, User * admin);
 		~Channel();
+		bool	addUser(User * user, std::string const key);
 
 	private:
 
@@ -20,6 +21,8 @@ class Channel {
 
 		std::string const		_name;
 		User *					_admin;
-		bool					_inviteOnly;
 		std::set<User *>		_users;
+		std::set<std::string>	_invited;
+		std::string				_key;
+		bool					_inviteOnly;
 };
