@@ -22,11 +22,17 @@
 #define	MAX_CONNECTIONS		100
 #define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
+
 #define vectorIt(type)					std::vector<type>::iterator
 #define mapIt(type1, type2)				std::map<type1, type2>::iterator
+typedef std::pair<int, std::string>		t_reply;
+
+
 #define LOGPREFIX                       CYAN << "[" << getTime() << "]" << "\t"
 
-typedef std::pair<int, std::string>		t_reply;
+
+#define ADMIN_USERNAME    "admin"
+#define ADMIN_PASSWORD    "adminPass"
 
 void				splitCmd(std::vector<std::string> & sCmd, std::string cmd);
 std::string const	getTime();

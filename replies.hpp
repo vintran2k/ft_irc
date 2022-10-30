@@ -20,6 +20,9 @@
 // #define RPL_MYINFO(nick)			
 
 
+//  381
+#define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + ":You are now an IRC operator" + CLRF
+
 //	421
 #define ERR_UNKNOWNCOMMAND(nick, command)		RPL_PREFIX("421", nick) + command + " :Unknown command" + CLRF
 
@@ -38,5 +41,6 @@
 //	462
 #define ERR_ALREADYREGISTRED(nick)				RPL_PREFIX("462", nick) + ":Unauthorized command (already registered)" + CLRF
 
-
+//  464
+#define ERR_PASSWDMISMATCH(nick)				RPL_PREFIX("464", nick) + ":Password incorrect" + CLRF
 

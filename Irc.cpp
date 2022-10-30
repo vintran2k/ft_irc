@@ -217,9 +217,15 @@ void	Irc::_NOTICE(User & user, std::vector<std::string> & sCmd, std::string & re
 
 void	Irc::_OPER(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)reply;
+	if (sCmd.size() < 3)
+		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+	else if (sCmd[1] != ADMIN_USERNAME || sCmd[2] != ADMIN_PASSWORD)
+		reply = ERR_PASSWDMISMATCH(user._nickName);
+	else
+	{
+		user._operator = true;
+		reply = RPL_YOUREOPER(user._nickName);
+	}
 }
 
 void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::string & reply) {
@@ -243,8 +249,8 @@ void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::string & repl
 void	Irc::_PING(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
 	(void)user;
-	(void)sCmd;
-	(void)reply;
+	std::string	arg = sCmd.size() > 1 ? sCmd[1] : "";
+	reply = ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " :" + arg + CLRF;
 }
 
 void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::string & reply) {
