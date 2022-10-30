@@ -48,7 +48,7 @@ Server::Server(int port, std::string const & password) :
 	<<	"	|   | ,'             ,---, '   .'  '---'    |   |.'      \\   \\ .'		"	<< std::endl
 	<<	"	`----'               ;   |  .'              `---'         `---`			"	<< std::endl
 	<<	"	                     `---'											\n\n"	<< std::endl
-	<< LOGPREFIX << BIGREEN << "Server listening on port " << port << "\n" << WHITE << std::endl;
+	<< LOGPREFIX << BIGREEN << "Server started on port " << port << "\n" << WHITE << std::endl;
 
 }
 
@@ -135,7 +135,7 @@ void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 					isRead = _clients[fd]->readFd();
 					if (isRead)
 						disconnect = _irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
-					else if (_clients[fd]->getReadBuffer().empty())	// sauf ctrlD
+					else if (_clients[fd]->getReadBuffer().empty())	// sauf ctrlD // ctrlC pb
 					{
 						_irc.deleteUser(fd);
 						deleteClient(fd);
@@ -143,7 +143,7 @@ void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 					}
 					haveData = _clients[fd]->haveData();
 				}
-				if (disconnect)
+				if (disconnect) 
 					clientsOFF.push_back(fd);
 			}
 			fdsSelected--;

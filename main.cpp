@@ -57,6 +57,7 @@ int	main(int ac, char **av) {
 	}
 	catch (std::exception & e) {
 		std::cerr << BRED << e.what() << WHITE << std::endl;
+		delete IrcServer;
 		return 1;
 	}
 
