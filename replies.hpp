@@ -4,7 +4,7 @@
 
 #define CLRF							"\r\n"
 #define SERVER_HOSTNAME					std::string("ft_irc.fr")
-#define RPL_PREFIX(code, nick)		std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick + " :")
+#define RPL_PREFIX(code, nick)			std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick + " :")
 
 
 //	001

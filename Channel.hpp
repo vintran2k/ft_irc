@@ -3,6 +3,8 @@
 #include "includes.hpp"
 #include "User.hpp"
 
+class User;
+
 class Channel {
 
 	public:

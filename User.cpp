@@ -12,3 +12,9 @@ User::User() :
 
 User::~User() {}
 
+void	User::_joinChannel(Channel * channel) {
+
+	if (_channels.find(channel) != _channels.end())
+		return ;
+	
+}
