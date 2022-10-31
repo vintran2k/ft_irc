@@ -24,14 +24,13 @@ class User {
 		std::string				_hostName;
 		std::string				_serverName;
 		std::string				_realName;
+		std::string				_prefix;
 
 		bool					_isPassOk;
 		bool					_isRegister;
 		bool					_operator;
 
 		std::set<Channel *>		_channels;
-
-		void	_joinChannel(Channel * channel);
 
 		friend class Irc;
 };

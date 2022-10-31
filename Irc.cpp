@@ -129,11 +129,21 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 		serverReply.push_back(std::make_pair(fdClient, ERR_UNKNOWNCOMMAND(user->_nickName, *sCmd.begin())));
 	else
 	{
+		if (sCmd[0] != "PASS" && !user->_isPassOk)
+			return false;
+		if (sCmd[0] != "PASS" && sCmd[0] != "NICK" && sCmd[0] != "USER")
+		{
+			if (!user->_isRegister && user->_isPassOk)
+			{
+				serverReply.push_back(std::make_pair(fdClient, ERR_NOTREGISTERED(user->_nickName)));
+				return false;
+			}
+		}
 		isRegisterBefore = user->_isRegister;
 		(this->*_cmds[cmdIndex])(*user, sCmd, reply);
 		if (!reply.empty())
 			serverReply.push_back(std::make_pair(fdClient, reply));
-		if (sCmd[0] == "QUIT" || !user->_isPassOk)
+		if (sCmd[0] == "QUIT")
 			return true;
 		if (!isRegisterBefore && user->_isRegister)
 		{
@@ -155,10 +165,6 @@ void	Irc::_INVITE(User & user, std::vector<std::string> & sCmd, std::string & re
 
 void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & reply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)reply;
-
 	std::vector<std::string>	channels, keys;
 
 	if (sCmd.size() < 2)
@@ -167,25 +173,36 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 		return ;
 	}
 	split(channels, sCmd[1], ",");
-	
-	for (vectorIt(std::string) it = channels.begin(); it != channels.end(); it++)
-	{
-		bool	valid = true;
+	if (sCmd.size() > 2)
+		split(keys, sCmd[2], ",");
 
-		if ((*it)[0] != '#' || (*it).find_first_of(" \a,") != std::string::npos)
+	for (size_t i = 0; i < channels.size(); i++)
+	{
+		bool		valid = true;
+		std::string	key = i < keys.size() ? keys[i] : "";
+
+		if (channels[i][0] != '#' || channels[i].find_first_of(" \a,") != std::string::npos)
 		{
-			reply += ERR_NOSUCHCHANNEL(user._nickName, *it);
+			reply += ERR_NOSUCHCHANNEL(user._nickName, channels[i]);
 			valid = false;
 		}
 		if (valid)
 		{
-			// Channel *	channel = _findChannel(*it);
-			// if (channel)
-			// 	//join
-			// else
-			// 	_addNewChannel(*it, &user);
+			Channel *	channel = _findChannel(channels[i]);
+			if (channel && user._channels.find(channel) == user._channels.end())
+			{
+				int	ret = channel->addUser(&user, key);
+				if (ret == 1)
+					reply += ERR_INVITEONLYCHAN(user._nickName, channels[i]);
+				else if (ret == 2)
+					reply += ERR_BADCHANNELKEY(user._nickName, channels[i]);
+				else if (ret == 3)
+					reply += ERR_CHANNELISFULL(user._nickName, channels[i]);
+			}
+			else
+				_addNewChannel(channels[i], &user);
 		}
-
+		// reply += 
 	}
 
 
@@ -254,7 +271,7 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & repl
 		//
 	
 	user._nickName = nickName;
-	if (!user._userName.empty() && user._isPassOk)
+	if (user._userName != "*" && user._isPassOk)
 		user._isRegister = true;
 }
 
@@ -337,12 +354,13 @@ void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::string & repl
 		return ;
 	}
 
-	user._nickName = sCmd[1];
+	user._userName = sCmd[1];
 	user._hostName = sCmd[2];
 	user._serverName = sCmd[3];
 	user._realName = sCmd[4];
+	user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
 
-	if (user._nickName.size() && user._isPassOk)
+	if (user._nickName != "*" && user._isPassOk)
 		user._isRegister = true;
 }
 

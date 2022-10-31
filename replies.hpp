@@ -38,6 +38,9 @@
 //	433
 #define ERR_NICKNAMEINUSE(nick, errNick)		RPL_PREFIX("433", nick) + errNick + " :Nickname is already in use" + CLRF
 
+//	451
+#define ERR_NOTREGISTERED(nick)					RPL_PREFIX("451", nick)	+ "You have not registered" + CLRF
+
 //	461
 #define ERR_NEEDMOREPARAMS(nick, cmd)			RPL_PREFIX("461", nick) + cmd + " :Not enough parameters" + CLRF
 
@@ -47,3 +50,11 @@
 //  464
 #define ERR_PASSWDMISMATCH(nick)				RPL_PREFIX("464", nick) + "Password incorrect" + CLRF
 
+//	471
+#define ERR_CHANNELISFULL(nick, chan)			RPL_PREFIX("471", nick) + chan + " :Cannot join channel (+l)" + CLRF
+
+//	473
+#define ERR_INVITEONLYCHAN(nick, chan)			RPL_PREFIX("473", nick) + chan + " :Cannot join channel (+i)" + CLRF
+
+//	475
+#define ERR_BADCHANNELKEY(nick, chan)			RPL_PREFIX("475", nick) + chan + " :Cannot join channel (+k)" + CLRF
