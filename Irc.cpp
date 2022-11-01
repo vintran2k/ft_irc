@@ -338,6 +338,41 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::string & r
 	(void)user;
 	(void)sCmd;
 	(void)reply;
+
+	if (sCmd.size() < 3)
+	{
+		if (sCmd.size() == 2)
+			reply = ERR_NOTEXTTOSEND(user._nickName);
+		else
+			reply = ERR_NORECIPIENT(user._nickName, sCmd[0]);
+		return ;
+	}
+
+	std::string	target = sCmd[1];
+	std::string	text = sCmd[2];
+	if (target[0] == '#')
+	{
+		Channel	*channel = _findChannel(target);
+		if (!channel || !channel->isInChannel(&user))
+		{
+			reply = ERR_CANNOTSENDTOCHAN(user._nickName, target);
+			return ;
+		}
+		else
+		{
+			std::cout << "PASSAGE PRIVMSG" << std::endl;
+			reply = user._prefix + " PRIVMSG " + target + " " + text + CLRF;
+			for (setIt(User *) it = channel->_users.begin(); it != channel->_users.end(); it++)
+			{
+				// besoin de send reply a tout les users de channel avec serverReply...
+			}
+			// reply = user._prefix + " PRIVMSG " + target + " " + text + CLRF;
+		}
+	}
+	// else
+	// {
+
+	// }
 }
 
 void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::string & reply) {

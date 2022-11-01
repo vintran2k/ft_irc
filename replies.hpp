@@ -28,6 +28,15 @@
 //	403
 #define ERR_NOSUCHCHANNEL(nick, chan)			RPL_PREFIX("403", nick) + chan + " :No such channel" + CLRF
 
+//	404
+#define ERR_CANNOTSENDTOCHAN(nick, chan)		RPL_PREFIX("404", nick) + chan + " :Cannot send to channel" + CLRF
+
+//	411
+#define ERR_NORECIPIENT(nick, command)			RPL_PREFIX("411", nick) + "No recipient given (" + command + ")" + CLRF 
+
+//	412
+#define ERR_NOTEXTTOSEND(nick)					RPL_PREFIX("412", nick) + "No text to send" + CLRF
+
 //	421
 #define ERR_UNKNOWNCOMMAND(nick, command)		RPL_PREFIX("421", nick) + command + " :Unknown command" + CLRF
 

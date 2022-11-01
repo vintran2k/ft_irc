@@ -14,7 +14,8 @@ class Channel {
 		Channel(std::string const & name, User * admin);
 		~Channel();
 
-		int						addUser(User * user, std::string const key);
+		int			addUser(User * user, std::string const key);
+		bool		isInChannel(User * user);
 
 
 	private:
