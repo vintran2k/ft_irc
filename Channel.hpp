@@ -14,7 +14,8 @@ class Channel {
 		Channel(std::string const & name, User * admin);
 		~Channel();
 
-		int		addUser(User * user, std::string const key);
+		int						addUser(User * user, std::string const key);
+
 
 	private:
 
@@ -23,10 +24,13 @@ class Channel {
 		Channel &	operator=(Channel const & rhs);
 
 		std::string const		_name;
+		std::string				_topic;
 		User *					_admin;
 		std::set<User *>		_users;
 		std::set<User *>		_invited;
 		std::string				_key;
 		bool					_inviteOnly;
 		unsigned int			_nbUsers;
+
+		friend class Irc;
 };

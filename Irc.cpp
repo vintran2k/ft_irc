@@ -189,20 +189,31 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 		if (valid)
 		{
 			Channel *	channel = _findChannel(channels[i]);
+
 			if (channel && user._channels.find(channel) == user._channels.end())
 			{
 				int	ret = channel->addUser(&user, key);
+				std::cout << "RET = " << ret << std::endl;
 				if (ret == 1)
-					reply += ERR_INVITEONLYCHAN(user._nickName, channels[i]);
+					reply += ERR_INVITEONLYCHAN(user._nickName, channel->_name);
 				else if (ret == 2)
-					reply += ERR_BADCHANNELKEY(user._nickName, channels[i]);
+					reply += ERR_BADCHANNELKEY(user._nickName, channel->_name);
 				else if (ret == 3)
-					reply += ERR_CHANNELISFULL(user._nickName, channels[i]);
+					reply += ERR_CHANNELISFULL(user._nickName, channel->_name);
+				else
+				{
+					reply += user._prefix + " JOIN :" + channel->_name + CLRF;
+					if (!channel->_topic.empty())
+						RPL_TOPIC(user._nickName, channel->_name, channel->_topic);
+					
+				}
 			}
 			else
+			{
 				_addNewChannel(channels[i], &user);
+				reply += user._prefix + " JOIN :" + channels[i] + CLRF;
+			}
 		}
-		// reply += 
 	}
 
 
@@ -268,11 +279,13 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & repl
 	}
 
 	//if (user._isRegister == true)
-		//
-	
+
 	user._nickName = nickName;
+	if (user._isRegister)
+		reply = user._prefix + " NICK :" + nickName + CLRF;
 	if (user._userName != "*" && user._isPassOk)
 		user._isRegister = true;
+	user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
 }
 
 void	Irc::_NOTICE(User & user, std::vector<std::string> & sCmd, std::string & reply) {
@@ -358,10 +371,12 @@ void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::string & repl
 	user._hostName = sCmd[2];
 	user._serverName = sCmd[3];
 	user._realName = sCmd[4];
-	user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
 
 	if (user._nickName != "*" && user._isPassOk)
+	{
+		user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
 		user._isRegister = true;
+	}
 }
 
 void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::string & reply) {

@@ -19,6 +19,8 @@
 //	004
 // #define RPL_MYINFO(nick)			
 
+//	332
+#define RPL_TOPIC(nick, channel, topic)			RPL_PREFIX("332", nick) + channel + " :" + topic + CLRF
 
 //  381
 #define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + "You are now an IRC operator" + CLRF
