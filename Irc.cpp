@@ -114,7 +114,6 @@ int		Irc::_findCommand(std::string & cmd) {
 bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
 
 	std::vector<std::string>	sCmd;
-	std::string					reply;
 	User *						user;
 	int							cmdIndex;
 	bool						isRegisterBefore;
@@ -140,9 +139,7 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 			}
 		}
 		isRegisterBefore = user->_isRegister;
-		(this->*_cmds[cmdIndex])(*user, sCmd, reply);
-		if (!reply.empty())
-			serverReply.push_back(std::make_pair(fdClient, reply));
+		(this->*_cmds[cmdIndex])(*user, fdClient, sCmd, serverReply);
 		if (sCmd[0] == "QUIT")
 			return true;
 		if (!isRegisterBefore && user->_isRegister)
@@ -156,20 +153,21 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 }
 
 
-void	Irc::_INVITE(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_INVITE(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_JOIN(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	std::vector<std::string>	channels, keys;
 
 	if (sCmd.size() < 2)
 	{
-		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+		serverReply.push_back(std::make_pair(fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 		return ;
 	}
 	split(channels, sCmd[1], ",");
@@ -183,7 +181,7 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 
 		if (channels[i][0] != '#' || channels[i].find_first_of(" \a,") != std::string::npos)
 		{
-			reply += ERR_NOSUCHCHANNEL(user._nickName, channels[i]);
+			serverReply.push_back(std::make_pair(fd, ERR_NOSUCHCHANNEL(user._nickName, channels[i])));
 			valid = false;
 		}
 		if (valid)
@@ -195,23 +193,23 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 				int	ret = channel->addUser(&user, key);
 				std::cout << "RET = " << ret << std::endl;
 				if (ret == 1)
-					reply += ERR_INVITEONLYCHAN(user._nickName, channel->_name);
+					serverReply.push_back(std::make_pair(fd, ERR_INVITEONLYCHAN(user._nickName, channel->_name)));
 				else if (ret == 2)
-					reply += ERR_BADCHANNELKEY(user._nickName, channel->_name);
+					serverReply.push_back(std::make_pair(fd, ERR_BADCHANNELKEY(user._nickName, channel->_name)));
 				else if (ret == 3)
-					reply += ERR_CHANNELISFULL(user._nickName, channel->_name);
+					serverReply.push_back(std::make_pair(fd, ERR_CHANNELISFULL(user._nickName, channel->_name)));
 				else
 				{
-					reply += user._prefix + " JOIN :" + channel->_name + CLRF;
+					serverReply.push_back(std::make_pair(fd, user._prefix + " JOIN :" + channel->_name + CLRF));
 					if (!channel->_topic.empty())
-						RPL_TOPIC(user._nickName, channel->_name, channel->_topic);
+						serverReply.push_back(std::make_pair(fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
 					
 				}
 			}
 			else
 			{
 				_addNewChannel(channels[i], &user);
-				reply += user._prefix + " JOIN :" + channels[i] + CLRF;
+				serverReply.push_back(std::make_pair(fd, user._prefix + " JOIN :" + channels[i] + CLRF));
 			}
 		}
 	}
@@ -219,62 +217,67 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::string & repl
 
 }
 
-void	Irc::_KICK(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_KICK(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_KILL(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_KILL(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_LIST(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_LIST(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_MODE(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_MODE(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_NAMES(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_NAMES(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & reply) { //	username ne change pas dans hexchat
+void	Irc::_NICK(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) { //	username ne change pas dans hexchat
 
 	std::string	nickName;
 	std::string	validChar(VALIDCHAR);(void)user;//
 
 	if (sCmd.size() == 1)
 	{
-		reply = ERR_NONICKNAMEGIVEN(user._nickName);
+		serverReply.push_back(std::make_pair(fd, ERR_NONICKNAMEGIVEN(user._nickName)));
 		return ;
 	}
 	nickName = sCmd[1];
 	for (std::string::iterator it = nickName.begin(); it != nickName.end(); it++)
 		if (validChar.find(*it) == std::string::npos) {
-			reply = ERR_ERRONEUSNICKNAME(user._nickName, nickName);
+			serverReply.push_back(std::make_pair(fd, ERR_ERRONEUSNICKNAME(user._nickName, nickName)));
 			return ;
 		}
 	if (nickName == user._nickName)
 		return ;
 	if (_findUser(nickName))
 	{
-		reply = ERR_NICKNAMEINUSE(user._nickName, nickName);
+		serverReply.push_back(std::make_pair(fd, ERR_NICKNAMEINUSE(user._nickName, nickName)));
 		return ;
 	}
 
@@ -282,69 +285,72 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::string & repl
 
 	user._nickName = nickName;
 	if (user._isRegister)
-		reply = user._prefix + " NICK :" + nickName + CLRF;
+		serverReply.push_back(std::make_pair(fd, user._prefix + " NICK :" + nickName + CLRF));
 	if (user._userName != "*" && user._isPassOk)
 		user._isRegister = true;
 	user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
 }
 
-void	Irc::_NOTICE(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_NOTICE(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_OPER(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_OPER(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 3)
-		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+		serverReply.push_back(std::make_pair(fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 	else if (sCmd[1] != ADMIN_USERNAME || sCmd[2] != ADMIN_PASSWORD)
-		reply = ERR_PASSWDMISMATCH(user._nickName);
+		serverReply.push_back(std::make_pair(fd, ERR_PASSWDMISMATCH(user._nickName)));
 	else
 	{
 		user._operator = true;
-		reply = RPL_YOUREOPER(user._nickName);
+		serverReply.push_back(std::make_pair(fd, RPL_YOUREOPER(user._nickName)));
 	}
 }
 
-void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_PART(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_PASS(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	// ajouter condition
 	if (sCmd.size() == 1)
-		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+		serverReply.push_back(std::make_pair(fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 	else if (user._isPassOk)
-		reply = ERR_ALREADYREGISTRED(user._nickName);
+		serverReply.push_back(std::make_pair(fd, ERR_ALREADYREGISTRED(user._nickName)));
 	else if (sCmd[1] == _password)
 		user._isPassOk = true;
 }
 
-void	Irc::_PING(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_PING(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
 	std::string	arg = sCmd.size() > 1 ? sCmd[1] : "";
-	reply = ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " :" + arg + CLRF;
+	serverReply.push_back(std::make_pair(fd, ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " :" + arg + CLRF));
 }
 
-void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_PRIVMSG(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 
 	if (sCmd.size() < 3)
 	{
 		if (sCmd.size() == 2)
-			reply = ERR_NOTEXTTOSEND(user._nickName);
+			serverReply.push_back(std::make_pair(fd, ERR_NOTEXTTOSEND(user._nickName)));
 		else
-			reply = ERR_NORECIPIENT(user._nickName, sCmd[0]);
+			serverReply.push_back(std::make_pair(fd, ERR_NORECIPIENT(user._nickName, sCmd[0])));
 		return ;
 	}
 
@@ -355,18 +361,18 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::string & r
 		Channel	*channel = _findChannel(target);
 		if (!channel || !channel->isInChannel(&user))
 		{
-			reply = ERR_CANNOTSENDTOCHAN(user._nickName, target);
+			serverReply.push_back(std::make_pair(fd, ERR_CANNOTSENDTOCHAN(user._nickName, target)));
 			return ;
 		}
 		else
 		{
 			std::cout << "PASSAGE PRIVMSG" << std::endl;
-			reply = user._prefix + " PRIVMSG " + target + " " + text + CLRF;
+			serverReply.push_back(std::make_pair(fd, user._prefix + " PRIVMSG " + target + " " + text + CLRF));
 			for (setIt(User *) it = channel->_users.begin(); it != channel->_users.end(); it++)
 			{
 				// besoin de send reply a tout les users de channel avec serverReply...
 			}
-			// reply = user._prefix + " PRIVMSG " + target + " " + text + CLRF;
+			// serverReply.push_back(std::make_pair(fd, user._prefix + " PRIVMSG " + target + " " + text + CLRF));
 		}
 	}
 	// else
@@ -375,30 +381,32 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::string & r
 	// }
 }
 
-void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_QUIT(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_TOPIC(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
 
-void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_USER(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 5)
 	{
-		reply = ERR_NEEDMOREPARAMS(user._nickName, sCmd[0]);
+		serverReply.push_back(std::make_pair(fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 		return ;
 	}
 	if (user._isRegister == true)
 	{
-		reply = ERR_ALREADYREGISTRED(user._nickName);
+		serverReply.push_back(std::make_pair(fd, ERR_ALREADYREGISTRED(user._nickName)));
 		return ;
 	}
 
@@ -414,9 +422,10 @@ void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::string & repl
 	}
 }
 
-void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::string & reply) {
+void	Irc::_WHO(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)user;
+	(void)fd;
 	(void)sCmd;
-	(void)reply;
+	(void)serverReply;
 }
