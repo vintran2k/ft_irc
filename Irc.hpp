@@ -35,6 +35,7 @@ class Irc {
 		User *		_findUser(std::string const & nickname);
 		Channel *	_findChannel(std::string const & name);
 		void		_addNewChannel(std::string const & name, User * user);
+		void		_replyToUsers(int senderFd, std::set<User *> const & users, std::vector<t_reply> & serverReply, std::string reply);
 
 		void	_INVITE(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_JOIN(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);

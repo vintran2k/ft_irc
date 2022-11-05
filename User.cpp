@@ -1,6 +1,7 @@
 #include "User.hpp"
 
-User::User() :
+User::User(int fd) :
+	_fd(fd),
 	_nickName("*"),
 	_userName("*"),
 	_hostName("*"),

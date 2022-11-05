@@ -61,7 +61,7 @@ void	Irc::addUser(Client & client) {
 
 	int	clientFd = client.getFd();
 
-	_users.insert(std::make_pair(clientFd, new User()));
+	_users.insert(std::make_pair(clientFd, new User(clientFd)));
 	if (_password.empty())
 		_users[clientFd]->_isPassOk = true;
 }
@@ -152,6 +152,16 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	return false;
 }
 
+void		Irc::_replyToUsers(int senderFd, std::set<User *> const & users, std::vector<t_reply> & serverReply, std::string reply) {
+
+	setIt(User *)	it;
+
+	for (it = users.begin(); it != users.end(); it++)
+	{
+		if (senderFd != (*it)->_fd)
+			serverReply.push_back(std::make_pair((*it)->_fd, reply));
+	}
+}
 
 void	Irc::_INVITE(User & user, int fd, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
@@ -191,7 +201,6 @@ void	Irc::_JOIN(User & user, int fd, std::vector<std::string> & sCmd, std::vecto
 			if (channel && user._channels.find(channel) == user._channels.end())
 			{
 				int	ret = channel->addUser(&user, key);
-				std::cout << "RET = " << ret << std::endl;
 				if (ret == 1)
 					serverReply.push_back(std::make_pair(fd, ERR_INVITEONLYCHAN(user._nickName, channel->_name)));
 				else if (ret == 2)
@@ -200,13 +209,13 @@ void	Irc::_JOIN(User & user, int fd, std::vector<std::string> & sCmd, std::vecto
 					serverReply.push_back(std::make_pair(fd, ERR_CHANNELISFULL(user._nickName, channel->_name)));
 				else
 				{
-					serverReply.push_back(std::make_pair(fd, user._prefix + " JOIN :" + channel->_name + CLRF));
-					if (!channel->_topic.empty())
-						serverReply.push_back(std::make_pair(fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
+					_replyToUsers(-1, channel->_users, serverReply, user._prefix + " JOIN :" + channel->_name + CLRF);
+					// if (!channel->_topic.empty())
+					// 	serverReply.push_back(std::make_pair(fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
 					
 				}
 			}
-			else
+			else if (!channel)
 			{
 				_addNewChannel(channels[i], &user);
 				serverReply.push_back(std::make_pair(fd, user._prefix + " JOIN :" + channels[i] + CLRF));
@@ -365,15 +374,7 @@ void	Irc::_PRIVMSG(User & user, int fd, std::vector<std::string> & sCmd, std::ve
 			return ;
 		}
 		else
-		{
-			std::cout << "PASSAGE PRIVMSG" << std::endl;
-			serverReply.push_back(std::make_pair(fd, user._prefix + " PRIVMSG " + target + " " + text + CLRF));
-			for (setIt(User *) it = channel->_users.begin(); it != channel->_users.end(); it++)
-			{
-				// besoin de send reply a tout les users de channel avec serverReply...
-			}
-			// serverReply.push_back(std::make_pair(fd, user._prefix + " PRIVMSG " + target + " " + text + CLRF));
-		}
+			_replyToUsers(user._fd, channel->_users, serverReply, user._prefix + " PRIVMSG " + target + " " + text + CLRF);
 	}
 	// else
 	// {

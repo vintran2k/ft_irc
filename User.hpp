@@ -10,7 +10,7 @@ class User {
 
 	public:
 
-		User();
+		User(int fd);
 		~User();
 
 
@@ -19,6 +19,7 @@ class User {
 		User(User const & rhs);
 		User &	operator=(User const & rhs);
 
+		int						_fd;
 		std::string				_nickName;
 		std::string				_userName;
 		std::string				_hostName;
