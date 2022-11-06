@@ -29,7 +29,10 @@
 #define RPL_NOWAWAY(nick)						RPL_PREFIX("306", nick) + " :You have been marked as being away" + CLRF
 
 //	332
-#define RPL_TOPIC(nick, channel, topic)			RPL_PREFIX("332", nick) + " :" + channel + " :" + topic + CLRF
+#define RPL_TOPIC(nick, chan, topic)			RPL_PREFIX("332", nick) + " :" + chan + " :" + topic + CLRF
+
+//	341
+#define RPL_INVITING(nick, invited, chan)		RPL_PREFIX("341", nick) + " :" + invited + " " + chan + CLRF
 
 //  381
 #define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + " :You are now an IRC operator" + CLRF
@@ -56,10 +59,16 @@
 #define ERR_NONICKNAMEGIVEN(nick)				RPL_PREFIX("431", nick) + " :No nickname given" + CLRF
 
 //	432
-#define ERR_ERRONEUSNICKNAME(nick, errNick)		RPL_PREFIX("432", nick) + " :" + errNick + " :Erroneous nickname" + CLRF
+#define ERR_ERRONEUSNICKNAME(nick, errNick)		RPL_PREFIX("432", nick) + " " + errNick + " :Erroneous nickname" + CLRF
 
 //	433
-#define ERR_NICKNAMEINUSE(nick, errNick)		RPL_PREFIX("433", nick) + " :" + errNick + " :Nickname is already in use" + CLRF
+#define ERR_NICKNAMEINUSE(nick, errNick)		RPL_PREFIX("433", nick) + " " + errNick + " :Nickname is already in use" + CLRF
+
+//	442
+#define ERR_NOTONCHANNEL(nick, chan)			RPL_PREFIX("442", nick) + " :" + chan + " :You're not on that channel" + CLRF
+
+//	443
+#define ERR_USERONCHANNEL(nick, invited, chan)	RPL_PREFIX("443", nick) + " :" + invited + " " + chan + " :is already on channel" + CLRF
 
 //	451
 #define ERR_NOTREGISTERED(nick)					RPL_PREFIX("451", nick)	+ " :You have not registered" + CLRF
@@ -81,3 +90,6 @@
 
 //	475
 #define ERR_BADCHANNELKEY(nick, chan)			RPL_PREFIX("475", nick) + " :" + chan + " :Cannot join channel (+k)" + CLRF
+
+//	482
+#define ERR_CHANOPRIVSNEEDED(nick, chan)		RPL_PREFIX("482", nick) + " :" + chan + " :You're not channel operator" + CLRF

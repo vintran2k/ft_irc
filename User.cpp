@@ -7,10 +7,11 @@ User::User(int fd) :
 	_hostName("*"),
 	_realName("*"),
 	_prefix(""),
+	_awayMessage(""),
 	_isPassOk(false),
 	_isRegister(false),
 	_operator(false),
-	_away("")
+	_isAway(false)
 {}
 
 User::~User() {}

@@ -16,7 +16,7 @@ class Channel {
 
 		int			addUser(User * user, std::string const key);
 		bool		isInChannel(User * user);
-
+		bool		isOperator(User * user);
 
 	private:
 
@@ -28,6 +28,7 @@ class Channel {
 		std::string				_topic;
 		User *					_admin;
 		std::set<User *>		_users;
+		std::set<User *>		_operators;
 		std::set<User *>		_invited;
 		std::string				_key;
 		bool					_inviteOnly;

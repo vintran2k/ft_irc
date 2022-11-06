@@ -26,14 +26,15 @@ class User {
 		std::string				_serverName;
 		std::string				_realName;
 		std::string				_prefix;
+		std::string				_awayMessage;
 
 		bool					_isPassOk;
 		bool					_isRegister;
 		bool					_operator;
+		bool					_isAway;
 
 		std::set<Channel *>		_channels;
 
-		std::string				_away;
 
 		friend class Irc;
 };

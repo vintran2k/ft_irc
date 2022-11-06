@@ -9,6 +9,7 @@ Channel::Channel(std::string const & name, User * admin) :
 	if (admin)
 	{
 		_users.insert(admin);
+		_operators.insert(admin);
 		_nbUsers++;
 	}
 }
@@ -32,4 +33,16 @@ int 	Channel::addUser(User * user, std::string const key) {  // in progress
 	return 0;
 }
 
-bool	Channel::isInChannel(User * user) { return (_users.find(user) != _users.end()); }
+bool	Channel::isInChannel(User * user) {
+
+	if (_users.find(user) != _users.end())
+		return true;
+	return false;
+}
+
+bool		Channel::isOperator(User * user) {
+
+	if (_operators.find(user) != _operators.end())
+		return true;
+	return false;
+}
