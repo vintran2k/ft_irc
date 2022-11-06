@@ -9,7 +9,8 @@ User::User(int fd) :
 	_prefix(""),
 	_isPassOk(false),
 	_isRegister(false),
-	_operator(false)
+	_operator(false),
+	_away("")
 {}
 
 User::~User() {}

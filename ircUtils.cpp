@@ -17,6 +17,20 @@ void	split(std::vector<std::string> & res, std::string str, std::string const & 
 	}
 }
 
+std::string	appendParams(std::vector<std::string> const & sCmd, std::vector<std::string>::const_iterator begin) {
+
+	std::string	res;
+	std::vector<std::string>::const_iterator	it;
+
+	for (it = begin; it != sCmd.end(); it++)
+	{
+		res += *it;
+		if (it != sCmd.end() -1)
+			res += " ";
+	}
+	return res;
+}
+
 std::string const	getTime() {
 
 	time_t	t(time(NULL));

@@ -33,5 +33,7 @@ class User {
 
 		std::set<Channel *>		_channels;
 
+		std::string				_away;
+
 		friend class Irc;
 };
