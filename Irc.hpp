@@ -13,7 +13,7 @@ class Irc {
 		~Irc();
 
 		void	addUser(Client & client);
-		void	deleteUser(int const fd);
+		void	disconnectUser(int const fd);
 		bool	getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd);
 
 
@@ -34,7 +34,7 @@ class Irc {
 		int			_findCommand(std::string & cmd);
 		User *		_findUser(std::string const & nickname);
 		Channel *	_findChannel(std::string const & name);
-		void		_addNewChannel(std::string const & name, User * user);
+		Channel *	_addNewChannel(std::string const & name, User * user);
 		void		_replyToUsers(int senderFd, std::set<User *> const & users, std::vector<t_reply> & serverReply, std::string reply);
 
 		void	_AWAY(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);

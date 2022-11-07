@@ -13,6 +13,9 @@ class User {
 		User(int fd);
 		~User();
 
+		std::string const &		getNickName() const;
+		std::string const &		getUserName() const;
+		std::string const &		getHostName() const;
 
 	private:
 

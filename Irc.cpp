@@ -68,11 +68,30 @@ void	Irc::addUser(Client & client) {
 		_users[clientFd]->_isPassOk = true;
 }
 
-void	Irc::deleteUser(int const fd) {
+void	Irc::disconnectUser(int const fd) {
 
 	if (_users.find(fd) != _users.end())
 	{
-		// if _users[userFd]->_isRegister
+		if (!_users[fd]->_channels.empty())
+		{
+			std::set<Channel *> &	channels = _users[fd]->_channels;
+			for (setIt(Channel *) it = channels.begin(); it != channels.end(); it++)
+			{
+				(*it)->_deleteUser(_users[fd]);
+				if ((*it)->_users.empty())
+				{
+					_channels.erase((*it)->_name);
+					delete *it;
+				}
+			}
+			channels.clear();
+			for (mapIt(std::string, Channel *) it = _channels.begin(); it != _channels.end(); it++)
+			{
+				Channel *	channel = it->second;
+				if (channel->_invited.find(_users[fd]) != channel->_invited.end())
+					channel->_invited.erase(_users[fd]);
+			}
+		}
 		delete _users[fd];
 		_users.erase(fd);
 	}
@@ -100,9 +119,11 @@ Channel *	Irc::_findChannel(std::string const & name) {
 		return NULL;
 }
 
-void		Irc::_addNewChannel(std::string const & name, User * user) {
+Channel *	Irc::_addNewChannel(std::string const & name, User * user) {
 
-	_channels.insert(std::make_pair(name, new Channel(name, user)));
+	Channel *	channel = new Channel(name, user);
+	_channels.insert(std::make_pair(name, channel));
+	return channel;
 }
 
 int		Irc::_findCommand(std::string & cmd) {
@@ -195,11 +216,11 @@ void	Irc::_INVITE(User & user, std::vector<std::string> & sCmd, std::vector<t_re
 		serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHNICK(user._nickName, sCmd[1])));
 	else if (!channel)
 		serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHCHANNEL(user._nickName, sCmd[2])));
-	else if (!channel->isInChannel(&user))
+	else if (!channel->_isInChannel(&user))
 		serverReply.push_back(std::make_pair(user._fd, ERR_NOTONCHANNEL(user._nickName, sCmd[2])));
-	else if (channel->isInChannel(toInvite))
+	else if (channel->_isInChannel(toInvite))
 		serverReply.push_back(std::make_pair(user._fd, ERR_USERONCHANNEL(user._nickName, sCmd[1], sCmd[2])));
-	else if (channel->_inviteOnly && !channel->isOperator(&user))
+	else if (channel->_inviteOnly && !channel->_isOperator(&user))
 		serverReply.push_back(std::make_pair(user._fd, ERR_CHANOPRIVSNEEDED(user._nickName, sCmd[2])));
 	else
 	{
@@ -240,7 +261,7 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 			if (channel && user._channels.find(channel) == user._channels.end())
 			{
-				int	ret = channel->addUser(&user, key);
+				int	ret = channel->_addUser(&user, key);
 				if (ret == 1)
 					serverReply.push_back(std::make_pair(user._fd, ERR_INVITEONLYCHAN(user._nickName, channel->_name)));
 				else if (ret == 2)
@@ -257,9 +278,10 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 			}
 			else if (!channel)
 			{
-				_addNewChannel(channels[i], &user);
-				serverReply.push_back(std::make_pair(user._fd, user._prefix + " JOIN :" + channels[i] + CLRF));
+				channel = _addNewChannel(channels[i], &user);
+				serverReply.push_back(std::make_pair(user._fd, user._prefix + " JOIN :" + channel->_name + CLRF));
 			}
+			user._channels.insert(channel);
 		}
 	}
 
@@ -299,6 +321,27 @@ void	Irc::_NAMES(User & user, std::vector<std::string> & sCmd, std::vector<t_rep
 	(void)user;
 	(void)sCmd;
 	(void)serverReply;
+
+	if (sCmd.size() > 1)
+	{
+		std::vector<std::string>	chanNames;
+		split(chanNames, sCmd[1], ",");
+
+		for (vectorIt(std::string) vIt = chanNames.begin(); vIt != chanNames.end(); vIt++)
+		{
+			Channel *	channel = _findChannel(*vIt);
+
+			if (channel)
+			{
+				std::string	list = channel->_getNamesList(false);
+				
+				if (!list.empty())
+					serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, list)));
+			}
+			serverReply.push_back(std::make_pair(user._fd, RPL_ENDOFNAMES(user._nickName, *vIt)));
+		}
+	}
+
 }
 
 void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) { //	username ne change pas dans hexchat
@@ -401,7 +444,7 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_r
 			Channel	*channel = _findChannel(target);
 			if (!channel)
 				serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHCHANNEL(user._nickName, target)));
-			else if (!channel->isInChannel(&user))
+			else if (!channel->_isInChannel(&user))
 				serverReply.push_back(std::make_pair(user._fd, ERR_CANNOTSENDTOCHAN(user._nickName, target)));
 			else
 				_replyToUsers(user._fd, channel->_users, serverReply, user._prefix + " PRIVMSG " + target + " " + text + CLRF);
@@ -423,9 +466,26 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_r
 
 void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)serverReply;
+	std::string	quitMsg;
+
+	if (sCmd.size() == 1)
+		quitMsg = "Client exited";
+	else
+	{
+		if (sCmd[1][0] == ':')
+			sCmd[1].erase(sCmd[1].begin());
+		quitMsg = "Quit: " + appendParams(sCmd, sCmd.begin() + 1);
+	}
+
+	std::set<User *>	users;
+	for (setIt(Channel *) it = user._channels.begin(); it != user._channels.end(); it++)
+		users.insert((*it)->_users.begin(), (*it)->_users.end());
+
+	for (setIt(User *) it = users.begin(); it != users.end(); it++)
+		std::cout << "NAME = " << (*it)->_nickName << std::endl;
+	_replyToUsers(user._fd, users, serverReply, user._prefix + " QUIT :" + quitMsg + CLRF);
+	serverReply.push_back(std::make_pair(user._fd, RPL_ERR(user._userName + "@" + user._hostName, quitMsg)));
+	disconnectUser(user._fd);
 }
 
 void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {

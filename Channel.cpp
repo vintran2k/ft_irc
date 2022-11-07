@@ -3,20 +3,18 @@
 Channel::Channel(std::string const & name, User * admin) :
 	_name(name),
 	_admin(admin),
-	_inviteOnly(false),
-	_nbUsers(0)
+	_inviteOnly(false)
 {
 	if (admin)
 	{
 		_users.insert(admin);
 		_operators.insert(admin);
-		_nbUsers++;
 	}
 }
 
 Channel::~Channel() {}
 
-int 	Channel::addUser(User * user, std::string const key) {  // in progress
+int 	Channel::_addUser(User * user, std::string const key) {  // in progress
 
 	(void)  key;
 	if (_users.find(user) != _users.end())
@@ -25,24 +23,49 @@ int 	Channel::addUser(User * user, std::string const key) {  // in progress
 		return 1;
 	if (!_key.empty() && _key != key)
 		return 2;
-	if (_nbUsers >= MAX_USERS)
+	if (_users.size() >= MAX_USERS)
 		return 3;
 	_users.insert(user);
 	_invited.erase(user);
-	_nbUsers++;
 	return 0;
 }
 
-bool	Channel::isInChannel(User * user) {
+void	Channel::_deleteUser(User *user) {
+
+	if (_admin == user)
+		_admin = NULL;
+	_users.erase(user);
+	_operators.erase(user);
+}
+
+bool	Channel::_isInChannel(User * user) const {
 
 	if (_users.find(user) != _users.end())
 		return true;
 	return false;
 }
 
-bool		Channel::isOperator(User * user) {
+bool		Channel::_isOperator(User * user) const {
 
 	if (_operators.find(user) != _operators.end())
 		return true;
 	return false;
+}
+
+std::string		Channel::_getNamesList(bool nickNameOnly) const {
+
+	std::string	list;
+	setIt(User *) it;
+
+	for (it = _users.begin(); it != _users.end(); it++)
+	{
+		if (it != _users.begin())
+			list += " ";
+		if (_isOperator(*it))
+			list += "@";
+		list += (*it)->getNickName();
+		if (!nickNameOnly)
+			list += "!" + (*it)->getUserName() + "@" + (*it)->getHostName();
+	}
+	return list;
 }

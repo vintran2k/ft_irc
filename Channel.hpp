@@ -14,9 +14,6 @@ class Channel {
 		Channel(std::string const & name, User * admin);
 		~Channel();
 
-		int			addUser(User * user, std::string const key);
-		bool		isInChannel(User * user);
-		bool		isOperator(User * user);
 
 	private:
 
@@ -32,7 +29,12 @@ class Channel {
 		std::set<User *>		_invited;
 		std::string				_key;
 		bool					_inviteOnly;
-		unsigned int			_nbUsers;
+
+		int				_addUser(User * user, std::string const key);
+		void			_deleteUser(User *user);
+		bool			_isInChannel(User * user) const;
+		bool			_isOperator(User * user) const;
+		std::string		_getNamesList(bool nickNameOnly) const;
 
 		friend class Irc;
 };

@@ -137,7 +137,7 @@ void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 						disconnect = _irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
 					else if (_clients[fd]->getReadBuffer().empty())	// sauf ctrlD // ctrlC pb
 					{
-						_irc.deleteUser(fd);
+						_irc.disconnectUser(fd);
 						deleteClient(fd);
 						break ;
 					}

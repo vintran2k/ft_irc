@@ -5,7 +5,7 @@
 #define CLRF							"\r\n"
 #define SERVER_HOSTNAME					std::string("ft_irc.fr")
 #define RPL_PREFIX(code, nick)			std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick)
-
+#define RPL_ERR(user, errMsg)			std::string("ERROR :Closing link: (" + user + ") [" + errMsg + "]")
 
 //	001
 #define RPL_WELCOME(nick, user, host)			RPL_PREFIX("001", nick) + " :Welcome to the ft_irc Network, " + nick + "!" + user + "@" + host + CLRF
@@ -33,6 +33,12 @@
 
 //	341
 #define RPL_INVITING(nick, invited, chan)		RPL_PREFIX("341", nick) + " :" + invited + " " + chan + CLRF
+
+//	353
+#define RPL_NAMREPLY(nick, chan, names)			RPL_PREFIX("353", nick) + " = " + chan + " :" + names + CLRF
+
+//	366
+#define RPL_ENDOFNAMES(nick, chan)				RPL_PREFIX("366", nick) + " " + chan + " :End of /NAMES list" + CLRF // .?
 
 //  381
 #define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + " :You are now an IRC operator" + CLRF
