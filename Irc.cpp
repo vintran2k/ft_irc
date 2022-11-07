@@ -247,15 +247,11 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 	for (size_t i = 0; i < channels.size(); i++)
 	{
-		bool		valid = true;
 		std::string	key = i < keys.size() ? keys[i] : "";
 
 		if (channels[i][0] != '#' || channels[i].find_first_of(" \a,") != std::string::npos)
-		{
 			serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHCHANNEL(user._nickName, channels[i])));
-			valid = false;
-		}
-		if (valid)
+		else
 		{
 			Channel *	channel = _findChannel(channels[i]);
 
@@ -282,6 +278,8 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 				serverReply.push_back(std::make_pair(user._fd, user._prefix + " JOIN :" + channel->_name + CLRF));
 			}
 			user._channels.insert(channel);
+			serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, channel->_getNamesList())));
+			serverReply.push_back(std::make_pair(user._fd, RPL_ENDOFNAMES(user._nickName, channel->_name)));
 		}
 	}
 
@@ -318,10 +316,6 @@ void	Irc::_MODE(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 void	Irc::_NAMES(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)serverReply;
-
 	if (sCmd.size() > 1)
 	{
 		std::vector<std::string>	chanNames;
@@ -333,7 +327,7 @@ void	Irc::_NAMES(User & user, std::vector<std::string> & sCmd, std::vector<t_rep
 
 			if (channel)
 			{
-				std::string	list = channel->_getNamesList(false);
+				std::string	list = channel->_getNamesList();
 				
 				if (!list.empty())
 					serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, list)));
@@ -486,6 +480,7 @@ void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 	_replyToUsers(user._fd, users, serverReply, user._prefix + " QUIT :" + quitMsg + CLRF);
 	serverReply.push_back(std::make_pair(user._fd, RPL_ERR(user._userName + "@" + user._hostName, quitMsg)));
 	disconnectUser(user._fd);
+	// 3 hexchat 2 channel, 1 user dans chan1, 1 user dans chan2 et 1 user dans les 2 chan, quand celui qui est dans les 2 quit sa s'affiche dans 1 seul
 }
 
 void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {

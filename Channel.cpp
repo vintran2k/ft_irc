@@ -52,7 +52,7 @@ bool		Channel::_isOperator(User * user) const {
 	return false;
 }
 
-std::string		Channel::_getNamesList(bool nickNameOnly) const {
+std::string		Channel::_getNamesList() const {
 
 	std::string	list;
 	setIt(User *) it;
@@ -64,8 +64,6 @@ std::string		Channel::_getNamesList(bool nickNameOnly) const {
 		if (_isOperator(*it))
 			list += "@";
 		list += (*it)->getNickName();
-		if (!nickNameOnly)
-			list += "!" + (*it)->getUserName() + "@" + (*it)->getHostName();
 	}
 	return list;
 }

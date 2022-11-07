@@ -34,7 +34,7 @@ class Channel {
 		void			_deleteUser(User *user);
 		bool			_isInChannel(User * user) const;
 		bool			_isOperator(User * user) const;
-		std::string		_getNamesList(bool nickNameOnly) const;
+		std::string		_getNamesList() const;
 
 		friend class Irc;
 };
