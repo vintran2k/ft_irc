@@ -480,38 +480,59 @@ void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 	_replyToUsers(user._fd, users, serverReply, user._prefix + " QUIT :" + quitMsg + CLRF);
 	serverReply.push_back(std::make_pair(user._fd, RPL_ERR(user._userName + "@" + user._hostName, quitMsg)));
 	disconnectUser(user._fd);
-	// 3 hexchat 2 channel, 1 user dans chan1, 1 user dans chan2 et 1 user dans les 2 chan, quand celui qui est dans les 2 quit sa s'affiche dans 1 seul
 }
 
 void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)serverReply;
+	if (sCmd.size() < 2)
+		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
+	else
+	{
+		Channel *	channel = _findChannel(sCmd[1]);
+		if (!channel)
+			serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHCHANNEL(user._nickName, sCmd[1])));
+		else if (sCmd.size() == 2)
+		{
+			if (channel->_topic.empty())
+				serverReply.push_back(std::make_pair(user._fd, RPL_NOTOPIC(user._nickName, channel->_name)));
+			else
+				serverReply.push_back(std::make_pair(user._fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
+		}
+		else
+		{
+			if (!channel->_isInChannel(&user))
+				serverReply.push_back(std::make_pair(user._fd, ERR_NOTONCHANNEL(user._nickName, channel->_name)));
+			else if (!channel->_isOperator(&user))
+				serverReply.push_back(std::make_pair(user._fd, ERR_CHANOPRIVSNEEDED(user._nickName, channel->_name)));
+			else
+			{
+				if (sCmd[2][0] == ':')
+					sCmd[2].erase(sCmd[2].begin());
+				channel->_topic = appendParams(sCmd, sCmd.begin() + 2);
+				_replyToUsers(-1, channel->_users, serverReply, user._prefix + " TOPIC " + channel->_name + " :" + channel->_topic + CLRF);
+			}
+		}
+	}
 }
 
 void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 5)
-	{
 		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
-		return ;
-	}
-	if (user._isRegister == true)
-	{
+	else if (user._isRegister == true)
 		serverReply.push_back(std::make_pair(user._fd, ERR_ALREADYREGISTRED(user._nickName)));
-		return ;
-	}
-
-	user._userName = sCmd[1];
-	user._hostName = sCmd[2];
-	user._serverName = sCmd[3];
-	user._realName = sCmd[4];
-
-	if (user._nickName != "*" && user._isPassOk)
+	else
 	{
-		user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
-		user._isRegister = true;
+		user._userName = sCmd[1];
+		user._hostName = sCmd[2];
+		user._serverName = sCmd[3];
+		user._realName = sCmd[4];
+
+		if (user._nickName != "*" && user._isPassOk)
+		{
+			user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
+			user._isRegister = true;
+		}
 	}
 }
 

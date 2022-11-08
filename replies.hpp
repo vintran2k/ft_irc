@@ -28,11 +28,14 @@
 //	306
 #define RPL_NOWAWAY(nick)						RPL_PREFIX("306", nick) + " :You have been marked as being away" + CLRF
 
+//	331
+#define RPL_NOTOPIC(nick, chan)					RPL_PREFIX("331", nick) + " " + chan + " :No topic is set" + CLRF
+
 //	332
-#define RPL_TOPIC(nick, chan, topic)			RPL_PREFIX("332", nick) + " :" + chan + " :" + topic + CLRF
+#define RPL_TOPIC(nick, chan, topic)			RPL_PREFIX("332", nick) + " " + chan + " :" + topic + CLRF
 
 //	341
-#define RPL_INVITING(nick, invited, chan)		RPL_PREFIX("341", nick) + " :" + invited + " " + chan + CLRF
+#define RPL_INVITING(nick, invited, chan)		RPL_PREFIX("341", nick) + " " + invited + " " + chan + CLRF
 
 //	353
 #define RPL_NAMREPLY(nick, chan, names)			RPL_PREFIX("353", nick) + " = " + chan + " :" + names + CLRF
@@ -44,13 +47,13 @@
 #define RPL_YOUREOPER(nick)						RPL_PREFIX("381", nick) + " :You are now an IRC operator" + CLRF
 
 //	401
-#define ERR_NOSUCHNICK(nick, errNick)			RPL_PREFIX("401", nick) + " :" + errNick + " :No such nick" + CLRF
+#define ERR_NOSUCHNICK(nick, errNick)			RPL_PREFIX("401", nick) + " " + errNick + " :No such nick" + CLRF
 
 //	403
-#define ERR_NOSUCHCHANNEL(nick, chan)			RPL_PREFIX("403", nick) + " :" + chan + " :No such channel" + CLRF
+#define ERR_NOSUCHCHANNEL(nick, chan)			RPL_PREFIX("403", nick) + " " + chan + " :No such channel" + CLRF
 
 //	404
-#define ERR_CANNOTSENDTOCHAN(nick, chan)		RPL_PREFIX("404", nick) + " :" + chan + " :Cannot send to channel" + CLRF
+#define ERR_CANNOTSENDTOCHAN(nick, chan)		RPL_PREFIX("404", nick) + " " + chan + " :Cannot send to channel" + CLRF
 
 //	411
 #define ERR_NORECIPIENT(nick, command)			RPL_PREFIX("411", nick) + " :No recipient given (" + command + ")" + CLRF 
@@ -98,4 +101,4 @@
 #define ERR_BADCHANNELKEY(nick, chan)			RPL_PREFIX("475", nick) + " :" + chan + " :Cannot join channel (+k)" + CLRF
 
 //	482
-#define ERR_CHANOPRIVSNEEDED(nick, chan)		RPL_PREFIX("482", nick) + " :" + chan + " :You're not channel operator" + CLRF
+#define ERR_CHANOPRIVSNEEDED(nick, chan)		RPL_PREFIX("482", nick) + " " + chan + " :You're not channel operator" + CLRF
