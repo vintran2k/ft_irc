@@ -255,22 +255,22 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 		{
 			Channel *	channel = _findChannel(channels[i]);
 
-			if (channel && user._channels.find(channel) == user._channels.end())
+			if (channel)
 			{
+				if (user._channels.find(channel) != user._channels.end())
+					return ;
 				int	ret = channel->_addUser(&user, key);
-				if (ret == 1)
-					serverReply.push_back(std::make_pair(user._fd, ERR_INVITEONLYCHAN(user._nickName, channel->_name)));
-				else if (ret == 2)
-					serverReply.push_back(std::make_pair(user._fd, ERR_BADCHANNELKEY(user._nickName, channel->_name)));
-				else if (ret == 3)
-					serverReply.push_back(std::make_pair(user._fd, ERR_CHANNELISFULL(user._nickName, channel->_name)));
-				else
+				if (ret != 0)
 				{
-					_replyToUsers(-1, channel->_users, serverReply, user._prefix + " JOIN :" + channel->_name + CLRF);
-					// if (!channel->_topic.empty())
-					// 	serverReply.push_back(std::make_pair(fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
-					
+					if (ret == 1)
+						serverReply.push_back(std::make_pair(user._fd, ERR_INVITEONLYCHAN(user._nickName, channel->_name)));
+					else if (ret == 2)
+						serverReply.push_back(std::make_pair(user._fd, ERR_BADCHANNELKEY(user._nickName, channel->_name)));
+					else if (ret == 3)
+						serverReply.push_back(std::make_pair(user._fd, ERR_CHANNELISFULL(user._nickName, channel->_name)));
+					return ;
 				}
+				_replyToUsers(-1, channel->_users, serverReply, user._prefix + " JOIN :" + channel->_name + CLRF);
 			}
 			else if (!channel)
 			{
@@ -280,6 +280,8 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 			user._channels.insert(channel);
 			serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, channel->_getNamesList())));
 			serverReply.push_back(std::make_pair(user._fd, RPL_ENDOFNAMES(user._nickName, channel->_name)));
+			if (!channel->_topic.empty())
+				serverReply.push_back(std::make_pair(user._fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
 		}
 	}
 
@@ -356,20 +358,28 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 		}
 	if (nickName == user._nickName)
 		return ;
-	if (_findUser(nickName))
-	{
+	else if (_findUser(nickName))
 		serverReply.push_back(std::make_pair(user._fd, ERR_NICKNAMEINUSE(user._nickName, nickName)));
-		return ;
+	else
+	{
+		//if (user._isRegister == true)
+
+		user._nickName = nickName;
+		if (user._isRegister)
+		{
+			std::set<User *>	users;
+			for (setIt(Channel *) it = user._channels.begin(); it != user._channels.end(); it++)
+				users.insert((*it)->_users.begin(), (*it)->_users.end());
+			if (users.empty())
+				users.insert(&user);
+			_replyToUsers(-1, users, serverReply, user._prefix + " NICK :" + nickName + CLRF);
+		}
+		if (user._userName != "*" && user._isPassOk)
+		{
+			user._isRegister = true;
+			user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
+		}
 	}
-
-	//if (user._isRegister == true)
-
-	user._nickName = nickName;
-	if (user._isRegister)
-		serverReply.push_back(std::make_pair(user._fd, user._prefix + " NICK :" + nickName + CLRF));
-	if (user._userName != "*" && user._isPassOk)
-		user._isRegister = true;
-	user._prefix = std::string(":") + user._nickName + '!' + user._userName + '@' + user._hostName;
 }
 
 void	Irc::_NOTICE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
@@ -475,8 +485,6 @@ void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 	for (setIt(Channel *) it = user._channels.begin(); it != user._channels.end(); it++)
 		users.insert((*it)->_users.begin(), (*it)->_users.end());
 
-	for (setIt(User *) it = users.begin(); it != users.end(); it++)
-		std::cout << "NAME = " << (*it)->_nickName << std::endl;
 	_replyToUsers(user._fd, users, serverReply, user._prefix + " QUIT :" + quitMsg + CLRF);
 	serverReply.push_back(std::make_pair(user._fd, RPL_ERR(user._userName + "@" + user._hostName, quitMsg)));
 	disconnectUser(user._fd);
