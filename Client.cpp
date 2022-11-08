@@ -56,7 +56,6 @@ int		Client::recv() {
 	buffer[ret] = '\0';
 	_readBuffer += buffer;
 
-
 	return ret;
 }
 
