@@ -68,6 +68,17 @@ void	Irc::addUser(Client & client) {
 		_users[clientFd]->_isPassOk = true;
 }
 
+void	Irc::_deleteUserFromChannel(User *user, Channel *channel)
+{
+	user->_channels.erase(channel);
+	channel->_deleteUser(user);
+	if (channel->_users.empty())
+	{
+		_channels.erase(channel->_name);
+		delete channel;
+	}
+}
+
 void	Irc::disconnectUser(int const fd) {
 
 	if (_users.find(fd) != _users.end())
@@ -75,15 +86,8 @@ void	Irc::disconnectUser(int const fd) {
 		if (!_users[fd]->_channels.empty())
 		{
 			std::set<Channel *> &	channels = _users[fd]->_channels;
-			for (setIt(Channel *) it = channels.begin(); it != channels.end(); it++)
-			{
-				(*it)->_deleteUser(_users[fd]);
-				if ((*it)->_users.empty())
-				{
-					_channels.erase((*it)->_name);
-					delete *it;
-				}
-			}
+			for (setIt(Channel *) it = channels.begin(); it != channels.end(); it = channels.begin())
+				_deleteUserFromChannel(_users[fd], *it);
 			channels.clear();
 			for (mapIt(std::string, Channel *) it = _channels.begin(); it != _channels.end(); it++)
 			{
@@ -423,9 +427,33 @@ void	Irc::_OPER(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)serverReply;
+	if (sCmd.size() == 1)
+	{
+		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
+		return ;
+	}
+	std::vector<std::string>	chanNames;
+	std::string					msg;
+	split(chanNames, sCmd[1], ",");
+	if (sCmd.size() > 2)
+		msg = appendParams(sCmd, sCmd.begin() + 2);
+
+	for (vectorIt(std::string) it = chanNames.begin(); it != chanNames.end(); it++)
+	{
+		Channel *	channel = _findChannel(*it);
+		if (!channel)
+			serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHCHANNEL(user._nickName, *it)));
+		else if (!channel->_isInChannel(&user))
+			serverReply.push_back(std::make_pair(user._fd, ERR_NOTONCHANNEL(user._nickName, *it)));
+		else 
+		{
+			if (!msg.empty())
+				_replyToUsers(-1, channel->_users, serverReply, user._prefix + " PART " + channel->_name + " " + msg + CLRF);
+			else
+				_replyToUsers(-1, channel->_users, serverReply, user._prefix + " PART " + channel->_name + CLRF);
+			_deleteUserFromChannel(&user, channel);
+		}
+	}
 }
 
 void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
