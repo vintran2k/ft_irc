@@ -384,9 +384,28 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 void	Irc::_NOTICE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)serverReply;
+	if (sCmd.size() < 3)
+		return ;
+
+	std::vector<std::string>	targets;
+	split(targets, sCmd[1], ",");
+	std::string	text = appendParams(sCmd, sCmd.begin() + 2);
+	for (vectorIt(std::string) it = targets.begin(); it != targets.end(); it++)
+	{
+		std::string	target = *it;
+		if (target[0] == '#')
+		{
+			Channel	*channel = _findChannel(target);
+			if (channel)
+				_replyToUsers(user._fd, channel->_users, serverReply, user._prefix + " NOTICE " + target + " " + text + CLRF);
+		}
+		else
+		{
+			User *	receiver = _findUser(target);
+			if (receiver)
+				serverReply.push_back(std::make_pair(receiver->_fd, user._prefix + " NOTICE " + target + " " + text + CLRF));
+		}
+	}
 }
 
 void	Irc::_OPER(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
@@ -411,7 +430,6 @@ void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	// ajouter condition
 	if (sCmd.size() == 1)
 		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 	else if (user._isPassOk)
