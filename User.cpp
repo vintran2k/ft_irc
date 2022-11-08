@@ -14,6 +14,6 @@ User::User(int fd) :
 	_isAway(false)
 {}
 
-User::~User() {}
+User::~User() { _channels.clear(); }
 
 std::string const &		User::getNickName() const { return _nickName; }
