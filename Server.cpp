@@ -58,6 +58,7 @@ Server::~Server() {
 
 	for(it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
+	_clientsOFF.clear();
 
 	std::cout << LOGPREFIX << BIGREEN << "Server stopped" << WHITE << std::endl;
 }
@@ -117,7 +118,7 @@ int		Server::selectFd() {
 	return (ret);
 }
 
-void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
+void	Server::recvAndMakeReply(int fdsSelected) {
 
 	for (int fd = _fdMin; fd <= _fdMax && fdsSelected; fd++)
 	{
@@ -144,7 +145,7 @@ void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 					haveData = _clients[fd]->haveData();
 				}
 				if (disconnect)
-					clientsOFF.push_back(fd);
+					_clientsOFF.push_back(fd);
 			}
 			fdsSelected--;
 		}
@@ -154,13 +155,12 @@ void	Server::recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF) {
 void	Server::run() {
 
 	int	fdsSelected;
-	std::vector<int>	clientsOFF;
 
 	while (1)
 	{
 		//	recv
 		fdsSelected = selectFd();
-		recvAndMakeReply(fdsSelected, clientsOFF);
+		recvAndMakeReply(fdsSelected);
 		
 
 		//	send
@@ -176,10 +176,10 @@ void	Server::run() {
 			}
 		}
 
-		for (vectorIt(int) it = clientsOFF.begin(); it != clientsOFF.end(); it++)
+		for (vectorIt(int) it = _clientsOFF.begin(); it != _clientsOFF.end(); it++)
 			deleteClient(*it);
 
 		_serverReply.clear();
-		clientsOFF.clear();
+		_clientsOFF.clear();
 	}
 }

@@ -32,9 +32,10 @@ class Server {
 		std::string					_host;
 		Irc							_irc;
 		std::vector<t_reply>		_serverReply;
+		std::vector<int>			_clientsOFF;
 
 		void	connectClient();
 		void	deleteClient(int const fd);
 		int		selectFd();
-		void	recvAndMakeReply(int fdsSelected, std::vector<int> & clientsOFF);
+		void	recvAndMakeReply(int fdsSelected);
 };
