@@ -290,8 +290,6 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 				serverReply.push_back(std::make_pair(user._fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
 		}
 	}
-
-
 }
 
 void	Irc::_KICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
@@ -368,8 +366,6 @@ void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 		serverReply.push_back(std::make_pair(user._fd, ERR_NICKNAMEINUSE(user._nickName, nickName)));
 	else
 	{
-		//if (user._isRegister == true)
-
 		user._nickName = nickName;
 		if (user._isRegister)
 		{
