@@ -441,7 +441,7 @@ void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 void	Irc::_PING(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	std::string	arg = sCmd.size() > 1 ? sCmd[1] : "";
-	serverReply.push_back(std::make_pair(user._fd, ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " :" + arg + CLRF));
+	serverReply.push_back(std::make_pair(user._fd, ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " " + arg + CLRF));
 }
 
 void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
