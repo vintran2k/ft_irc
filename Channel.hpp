@@ -3,7 +3,7 @@
 #include "includes.hpp"
 #include "User.hpp"
 
-#define MAX_USERS	1000
+#define MAX_USERS	9999
 
 class User;
 
@@ -35,6 +35,7 @@ class Channel {
 		bool			_isInChannel(User * user) const;
 		bool			_isOperator(User * user) const;
 		std::string		_getNamesList(User * user) const;
+		int				_getVisibleValue() const;
 
 		friend class Irc;
 };

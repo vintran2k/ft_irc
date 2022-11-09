@@ -77,3 +77,13 @@ std::string		Channel::_getNamesList(User * user) const {
 	}
 	return list;
 }
+
+int				Channel::_getVisibleValue() const {
+
+	int	ret = 0;
+
+	for (setIt(User *) it = _users.begin(); it != _users.end(); it++)
+		if (!(*it)->isInvisible())
+			ret++;
+	return ret;
+}

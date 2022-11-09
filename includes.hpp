@@ -13,6 +13,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <sstream>
 #include <fcntl.h>
 #include <ctime>
 #include <signal.h>

@@ -28,6 +28,12 @@
 //	306
 #define RPL_NOWAWAY(nick)						RPL_PREFIX("306", nick) + " :You have been marked as being away" + CLRF
 
+//	322
+#define RPL_LIST(nick, chan, nb, topic)			RPL_PREFIX("322", nick) + " " + chan + " " + nb + " :" + topic + CLRF
+
+//	323
+#define RPL_LISTEND(nick)						RPL_PREFIX("323", nick) + " :End of LIST" + CLRF
+
 //	331
 #define RPL_NOTOPIC(nick, chan)					RPL_PREFIX("331", nick) + " " + chan + " :No topic is set" + CLRF
 
