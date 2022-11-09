@@ -15,6 +15,7 @@ class Irc {
 		void	addUser(Client & client);
 		void	disconnectUser(int const fd);
 		bool	getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd);
+		int		getFdKilled();
 
 
 	private:
@@ -29,6 +30,7 @@ class Irc {
 		std::map<int, User *>				_users;
 		std::map<std::string, Channel *>	_channels;
 		std::string const					_startTime;
+		int									_fdKilled;
 
 		void		_initCmds();
 		int			_findCommand(std::string & cmd);

@@ -106,5 +106,11 @@
 //	475
 #define ERR_BADCHANNELKEY(nick, chan)			RPL_PREFIX("475", nick) + " :" + chan + " :Cannot join channel (+k)" + CLRF
 
+// 481
+#define ERR_NOPRIVILEGES(nick)					RPL_PREFIX("481", nick) + " :Permission Denied- You're not an IRC operator" + CLRF
+
 //	482
 #define ERR_CHANOPRIVSNEEDED(nick, chan)		RPL_PREFIX("482", nick) + " " + chan + " :You're not channel operator" + CLRF
+
+//	483
+#define ERR_CANTKILLSERVER(nick)				RPL_PREFIX("483", nick) + " :You can't kill a server!" + CLRF

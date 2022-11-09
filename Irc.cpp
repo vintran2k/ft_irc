@@ -1,6 +1,6 @@
 #include "Irc.hpp"
 
-Irc::Irc(std::string const & password) : _password(password), _startTime(getTime())
+Irc::Irc(std::string const & password) : _password(password), _startTime(getTime()), _fdKilled(-1)
 {
 	_initCmds();
 }
@@ -138,6 +138,13 @@ int		Irc::_findCommand(std::string & cmd) {
 		if (cmd == _cmdNames[i])
 			return i;
 	return -1;
+}
+
+int		Irc::getFdKilled() {
+
+	int	ret = _fdKilled;
+	_fdKilled = -1;
+	return ret;
 }
 
 bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
@@ -297,13 +304,39 @@ void	Irc::_KICK(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 	(void)user;
 	(void)sCmd;
 	(void)serverReply;
+
+
 }
 
 void	Irc::_KILL(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	(void)user;
-	(void)sCmd;
-	(void)serverReply;
+	if (!user._operator)
+		serverReply.push_back(std::make_pair(user._fd, ERR_NOPRIVILEGES(user._nickName)));
+	else if (sCmd.size() == 1)
+		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
+	else if (sCmd[1] == SERVER_HOSTNAME)
+		serverReply.push_back(std::make_pair(user._fd, ERR_CANTKILLSERVER(user._nickName)));
+	else
+	{
+		User *	target;
+
+		target = _findUser(sCmd[1]);
+		if (!target)
+			serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHNICK(user._nickName, sCmd[1])));
+		else
+		{
+			_fdKilled = target->_fd;
+			std::string	comment;
+			if (sCmd.size() > 2)
+				comment = appendParams(sCmd, sCmd.begin() + 2);
+			else
+				comment = "Killed by " + user._nickName;
+			std::vector<std::string>	quitCmd;
+			quitCmd.push_back("QUIT");
+			quitCmd.push_back(comment);
+			_QUIT(*target, quitCmd, serverReply);
+		}
+	}
 }
 
 void	Irc::_LIST(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
@@ -494,8 +527,8 @@ void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 void	Irc::_PING(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
-	std::string	arg = sCmd.size() > 1 ? sCmd[1] : "";
-	serverReply.push_back(std::make_pair(user._fd, ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " " + arg + CLRF));
+	if (sCmd.size() > 1)
+		serverReply.push_back(std::make_pair(user._fd, ":" + SERVER_HOSTNAME + " PONG " + SERVER_HOSTNAME + " " + sCmd[1] + CLRF));
 }
 
 void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {

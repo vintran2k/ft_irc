@@ -146,6 +146,9 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 					}
 					haveData = _clients[fd]->haveData();
 				}
+				int	fdKilled = _irc.getFdKilled();
+				if (fdKilled != -1)
+					_clientsOFF.push_back(fdKilled);
 				if (disconnect)
 					_clientsOFF.push_back(fd);
 			}
