@@ -35,7 +35,7 @@ int 	Channel::_addUser(User * user, std::string const key) {  // in progress
 	return 0;
 }
 
-void	Channel::_deleteUser(User *user) {
+void	Channel::_deleteUser(User * user) {
 
 	if (_admin == user)
 		_admin = NULL;
@@ -57,18 +57,23 @@ bool		Channel::_isOperator(User * user) const {
 	return false;
 }
 
-std::string		Channel::_getNamesList() const {
+std::string		Channel::_getNamesList(User * user) const {
 
 	std::string	list;
 	setIt(User *) it;
 
+	bool	isInChannel = _isInChannel(user);
+
 	for (it = _users.begin(); it != _users.end(); it++)
 	{
-		if (it != _users.begin())
-			list += " ";
-		if (_isOperator(*it))
-			list += "@";
-		list += (*it)->getNickName();
+		if (isInChannel || (!isInChannel && !(*it)->isInvisible()))
+		{
+			if (it != _users.begin())
+				list += " ";
+			if (_isOperator(*it))
+				list += "@";
+			list += (*it)->getNickName();
+		}
 	}
 	return list;
 }

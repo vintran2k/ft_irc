@@ -197,13 +197,13 @@ void	Irc::_AWAY(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 	if (sCmd.size() == 1)
 	{
 		user._awayMessage = "";
-		user._isAway = false;
+		user._away = false;
 		serverReply.push_back(std::make_pair(user._fd, RPL_UNAWAY(user._nickName)));
 	}
 	else
 	{
 		user._awayMessage = appendParams(sCmd, sCmd.begin() + 1);
-		user._isAway = true;
+		user._away = true;
 		serverReply.push_back(std::make_pair(user._fd, RPL_NOWAWAY(user._nickName)));
 	}
 }
@@ -230,7 +230,7 @@ void	Irc::_INVITE(User & user, std::vector<std::string> & sCmd, std::vector<t_re
 		serverReply.push_back(std::make_pair(user._fd, ERR_CHANOPRIVSNEEDED(user._nickName, sCmd[2])));
 	else
 	{
-		if (toInvite->_isAway)
+		if (toInvite->_away)
 			serverReply.push_back(std::make_pair(user._fd, RPL_AWAY(user._nickName, toInvite->_nickName, toInvite->_awayMessage)));
 		channel->_invited.insert(toInvite);
 		serverReply.push_back(std::make_pair(user._fd, RPL_INVITING(user._nickName, sCmd[1], sCmd[2])));
@@ -284,7 +284,7 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 				serverReply.push_back(std::make_pair(user._fd, user._prefix + " JOIN :" + channel->_name + CLRF));
 			}
 			user._channels.insert(channel);
-			serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, channel->_getNamesList())));
+			serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, channel->_getNamesList(&user))));
 			serverReply.push_back(std::make_pair(user._fd, RPL_ENDOFNAMES(user._nickName, channel->_name)));
 			if (!channel->_topic.empty())
 				serverReply.push_back(std::make_pair(user._fd, RPL_TOPIC(user._nickName, channel->_name, channel->_topic)));
@@ -311,6 +311,29 @@ void	Irc::_LIST(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 	(void)user;
 	(void)sCmd;
 	(void)serverReply;
+
+	std::map<std::string, Channel *>	channels;
+
+	if (sCmd.size() == 1)
+		channels = _channels;
+	else
+	{
+		std::vector<std::string>	chanNames;
+		Channel *					channel;
+
+		split(chanNames, sCmd[1], ",");
+		for (vectorIt(std::string) it = chanNames.begin(); it != chanNames.end(); it++)
+		{
+			channel = _findChannel(*it);
+			if (channel)
+				channels[*it] = channel;
+		}
+	}
+
+	for (mapIt(std::string, Channel *) it = channels.begin(); it != channels.end(); it++)
+	{
+		
+	}
 }
 
 void	Irc::_MODE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
@@ -333,7 +356,7 @@ void	Irc::_NAMES(User & user, std::vector<std::string> & sCmd, std::vector<t_rep
 
 			if (channel)
 			{
-				std::string	list = channel->_getNamesList();
+				std::string	list = channel->_getNamesList(&user);
 				
 				if (!list.empty())
 					serverReply.push_back(std::make_pair(user._fd, RPL_NAMREPLY(user._nickName, channel->_name, list)));
@@ -504,7 +527,7 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_r
 				serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHNICK(user._nickName, target)));
 			else
 			{
-				if (receiver->_isAway)
+				if (receiver->_away)
 					serverReply.push_back(std::make_pair(user._fd, RPL_AWAY(user._nickName, receiver->_nickName, receiver->_awayMessage)));
 				serverReply.push_back(std::make_pair(receiver->_fd, user._prefix + " PRIVMSG " + target + " " + text + CLRF));
 			}
@@ -593,4 +616,11 @@ void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply
 	(void)user;
 	(void)sCmd;
 	(void)serverReply;
+
+	if (sCmd.size() == 1)
+	{
+		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
+		return ;
+	}
+
 }

@@ -14,6 +14,7 @@ class User {
 		~User();
 
 		std::string const &		getNickName() const;
+		bool					isInvisible() const;
 
 
 	private:
@@ -33,7 +34,8 @@ class User {
 		bool					_isPassOk;
 		bool					_isRegister;
 		bool					_operator;
-		bool					_isAway;
+		bool					_away;
+		bool					_invisible;
 
 		std::set<Channel *>		_channels;
 

@@ -31,10 +31,10 @@ class Channel {
 		bool					_inviteOnly;
 
 		int				_addUser(User * user, std::string const key);
-		void			_deleteUser(User *user);
+		void			_deleteUser(User * user);
 		bool			_isInChannel(User * user) const;
 		bool			_isOperator(User * user) const;
-		std::string		_getNamesList() const;
+		std::string		_getNamesList(User * user) const;
 
 		friend class Irc;
 };

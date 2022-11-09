@@ -11,9 +11,12 @@ User::User(int fd) :
 	_isPassOk(false),
 	_isRegister(false),
 	_operator(false),
-	_isAway(false)
+	_away(false),
+	_invisible(false)
 {}
 
 User::~User() { _channels.clear(); }
 
 std::string const &		User::getNickName() const { return _nickName; }
+
+bool					User::isInvisible() const { return _invisible; }
