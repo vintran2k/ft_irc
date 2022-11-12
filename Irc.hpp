@@ -38,6 +38,7 @@ class Irc {
 		Channel *	_findChannel(std::string const & name);
 		Channel *	_addNewChannel(std::string const & name, User * user);
 		void		_deleteUserFromChannel(User * user, Channel * channel);
+		bool		_isCommonChannel(User * a, User * b) const;
 		void		_replyToUsers(int senderFd, std::set<User *> const & users, std::vector<t_reply> & serverReply, std::string reply);
 
 		void	_AWAY(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);

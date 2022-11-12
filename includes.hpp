@@ -41,3 +41,4 @@ typedef std::pair<int, std::string>		t_reply;
 void				split(std::vector<std::string> & res, std::string str, std::string const & delimiter);
 std::string			appendParams(std::vector<std::string> const & sCmd, std::vector<std::string>::const_iterator begin);
 std::string const	getTime();
+bool				maskCmp(std::string const mask, std::string const s);

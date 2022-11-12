@@ -28,6 +28,9 @@
 //	306
 #define RPL_NOWAWAY(nick)							RPL_PREFIX("306", nick) + " :You have been marked as being away" + CLRF
 
+//	315
+#define RPL_ENDOFWHO(nick, name)					RPL_PREFIX("315", nick) + " " + name + " :End of WHO list" + CLRF
+
 //	322
 #define RPL_LIST(nick, chan, nb, topic)				RPL_PREFIX("322", nick) + " " + chan + " " + nb + " :" + topic + CLRF
 
@@ -42,6 +45,9 @@
 
 //	341
 #define RPL_INVITING(nick, invited, chan)			RPL_PREFIX("341", nick) + " " + invited + " " + chan + CLRF
+
+//	352
+#define RPL_WHOREPLY(nick, chan, u, h, s, n, f, r)	RPL_PREFIX("352", nick) + " " + chan + " " + u + " " + h + " " + s + " " + n + " " + f + " :0 " + r + CLRF
 
 //	353
 #define RPL_NAMREPLY(nick, chan, names)				RPL_PREFIX("353", nick) + " = " + chan + " :" + names + CLRF

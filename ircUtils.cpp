@@ -39,3 +39,37 @@ std::string const	getTime() {
 	
 	return (res);
 }
+
+bool				maskCmp(std::string const mask, std::string const s) {
+
+	size_t	pos;
+
+	std::cout << "m = " << mask << " s = " << s << std::endl;
+	if (mask == s)
+		return true;
+
+	pos = mask.find('*');
+	if (pos != std::string::npos)
+	{
+		if (pos != 0)
+		{
+			if (s.compare(0, pos, mask.c_str(), pos) != 0)
+			{
+				std::cout << "F1\n";
+				return false;
+			}
+		}
+		if (pos != mask.size() - 1)
+		{
+			std::string	toFind = mask.substr(pos + 1);
+			size_t	sPos = s.find(toFind);
+			if (sPos == std::string::npos || (sPos + toFind.size() != s.size())) {
+				std::cout << "F2\n";
+				return false;
+			}
+		}
+		return true;
+	}
+	std::cout << "F3\n";
+	return false;
+}
