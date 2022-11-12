@@ -9,7 +9,25 @@ SRCS_IRC		=	Irc.cpp			\
 					User.cpp		\
 					Channel.cpp		\
 					ircUtils.cpp
-SRCS_CMD		=	AWAY.cpp
+SRCS_CMD		=	AWAY.cpp		\
+					INVITE.cpp		\
+					JOIN.cpp		\
+					KICK.cpp		\
+					KILL.cpp		\
+					LIST.cpp		\
+					MODE.cpp		\
+					NAMES.cpp		\
+					NICK.cpp		\
+					NOTICE.cpp		\
+					OPER.cpp		\
+					PART.cpp		\
+					PASS.cpp		\
+					PING.cpp		\
+					PRIVMSG.cpp		\
+					QUIT.cpp		\
+					TOPIC.cpp		\
+					USER.cpp		\
+					WHO.cpp
 
 
 CC				=	@c++
