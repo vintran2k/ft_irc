@@ -1,9 +1,10 @@
 #pragma once
 
-#include "includes.hpp"
+#include "../inc/includes.hpp"
+#include "../network/Client.hpp"
 #include "User.hpp"
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "replies.hpp"
 
 class Irc {
 

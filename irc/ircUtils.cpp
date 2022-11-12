@@ -1,4 +1,4 @@
-#include "includes.hpp"
+#include "../inc/includes.hpp"
 
 void	split(std::vector<std::string> & res, std::string str, std::string const & delimiter) {
 

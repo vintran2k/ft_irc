@@ -1,5 +1,5 @@
-#include "includes.hpp"
-#include "Server.hpp"
+#include "inc/includes.hpp"
+#include "network/Server.hpp"
 
 Server	*IrcServer = NULL;
 

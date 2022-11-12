@@ -30,7 +30,7 @@ bool	Client::haveData() {
 
 	if (_readBuffer.size())
 	{
-		_cmdSize = _readBuffer.find(CLRF);
+		_cmdSize = _readBuffer.find("\n\r");
 		if (_cmdSize != std::string::npos)
 		{
 			_cmdSize++;

@@ -18,7 +18,6 @@
 #include <ctime>
 #include <signal.h>
 
-#include "replies.hpp"
 #include "colors.hpp"
 
 #define	MAX_CONNECTIONS		100

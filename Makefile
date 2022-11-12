@@ -1,28 +1,37 @@
 NAME			=	ircserv
-SRCS			=	main.cpp		\
-					Socket.cpp		\
+
+
+MAIN			=	main.cpp
+SRCS_NETWORK	=	Socket.cpp		\
 					Server.cpp		\
-					Client.cpp		\
-					Irc.cpp			\
+					Client.cpp
+SRCS_IRC		=	Irc.cpp			\
 					User.cpp		\
-					ircUtils.cpp	\
-					Channel.cpp
+					Channel.cpp		\
+					ircUtils.cpp
+SRCS_CMD		=	AWAY.cpp
+
+
 CC				=	@c++
-FLAGS			=	-Wall -Wextra -Werror -std=c++98 -g
+FLAGS			=	-Wall -Wextra -Werror -std=c++98 -g #// -g a enlever
 OBJDIR			=	objs
-OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
+OBJS			=	$(MAIN:.cpp=.o)									\
+					$(addprefix network/, $(SRCS_NETWORK:.cpp=.o))	\
+					$(addprefix irc/, $(SRCS_IRC:.cpp=.o))		\
+					$(addprefix irc/commands/, $(SRCS_CMD:.cpp=.o))
 
 
-all					:	$(NAME)
+.cpp.o			:
+				$(CC) $(FLAGS) -c $< -o $@
+
 
 $(NAME)			:	$(OBJS)
 				$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+				@mkdir -p $(OBJDIR)
+				@mv $(OBJS) $(OBJDIR)
 				@echo "\033[1;30m[$(NAME)] \033[1;32mcreated !\033[0m"
 
-${OBJDIR}/%.o	:	%.cpp
-				@mkdir -p $(OBJDIR)
-				$(CC) $(FLAGS) -c $< -o $@
-
+all				:	$(NAME)
 
 clean			:
 				@rm -rf $(OBJDIR)

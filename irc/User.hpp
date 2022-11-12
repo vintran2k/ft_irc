@@ -1,7 +1,7 @@
 #pragma once
 
-#include "includes.hpp"
-#include "Client.hpp"
+#include "../inc/includes.hpp"
+#include "../network/Client.hpp"
 #include "Channel.hpp"
 
 class Channel;

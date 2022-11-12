@@ -1,6 +1,6 @@
 #pragma once
 
-#include "includes.hpp"
+#include "../inc/includes.hpp"
 
 #define CLRF							"\r\n"
 #define SERVER_HOSTNAME					std::string("ft_irc.fr")

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "includes.hpp"
+#include "../inc/includes.hpp"
 #include "Socket.hpp"
 #include "Client.hpp"
-#include "Irc.hpp"
+#include "../irc/Irc.hpp"
 
 class Server {
 
