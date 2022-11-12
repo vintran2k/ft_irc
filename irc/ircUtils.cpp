@@ -54,19 +54,14 @@ bool				maskCmp(std::string const mask, std::string const s) {
 		if (pos != 0)
 		{
 			if (s.compare(0, pos, mask.c_str(), pos) != 0)
-			{
-				std::cout << "F1\n";
 				return false;
-			}
 		}
 		if (pos != mask.size() - 1)
 		{
 			std::string	toFind = mask.substr(pos + 1);
 			size_t	sPos = s.find(toFind);
-			if (sPos == std::string::npos || (sPos + toFind.size() != s.size())) {
-				std::cout << "F2\n";
+			if (sPos == std::string::npos || (sPos + toFind.size() != s.size()))
 				return false;
-			}
 		}
 		return true;
 	}
