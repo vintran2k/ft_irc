@@ -10,6 +10,7 @@ SRCS_IRC		=	Irc.cpp			\
 					Channel.cpp		\
 					ircUtils.cpp
 SRCS_CMD		=	AWAY.cpp		\
+					DIE.cpp			\
 					INVITE.cpp		\
 					JOIN.cpp		\
 					KICK.cpp		\

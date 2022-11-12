@@ -6,6 +6,7 @@
 #include "Channel.hpp"
 #include "replies.hpp"
 
+
 class Irc {
 
 	public:
@@ -13,10 +14,12 @@ class Irc {
 		Irc(std::string const & password);
 		~Irc();
 
-		void	addUser(Client & client);
-		void	disconnectUser(int const fd);
-		bool	getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd);
-		int		getFdKilled();
+		void					addUser(Client & client);
+		void					disconnectUser(int const fd);
+		bool					getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd);
+		int						getFdKilled();
+		bool					getServerKilled() const;
+		std::string const &		getKiller() const;
 
 
 	private:
@@ -26,12 +29,14 @@ class Irc {
 		Irc &	operator=(Irc const & rhs);
 
 		std::string const					_password;
-		std::string							_cmdNames[19];
-		void								(Irc::*_cmds[19])(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
+		std::string							_cmdNames[20];
+		void								(Irc::*_cmds[20])(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		std::map<int, User *>				_users;
 		std::map<std::string, Channel *>	_channels;
 		std::string const					_startTime;
 		int									_fdKilled;
+		bool								_serverKilled;
+		std::string							_killer;
 
 		void		_initCmds();
 		int			_findCommand(std::string & cmd);
@@ -43,6 +48,7 @@ class Irc {
 		void		_replyToUsers(int senderFd, std::set<User *> const & users, std::vector<t_reply> & serverReply, std::string reply);
 
 		void	_AWAY(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
+		void	_DIE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_INVITE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_KICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);

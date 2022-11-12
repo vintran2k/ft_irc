@@ -62,7 +62,10 @@ Server::~Server() {
 	_serverReply.clear();
 	_clientsOFF.clear();
 
-	std::cout << LOGPREFIX << BIGREEN << "Server stopped" << WHITE << std::endl;
+	std::cout << LOGPREFIX << BIGREEN << "Server stopped";
+	if (_irc.getServerKilled())
+		std::cout << BIRED << " (killed by " << _irc.getKiller() << ")";
+	std::cout << WHITE << std::endl;
 }
 
 int		Server::getPort() const { return _port; }
@@ -147,6 +150,8 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 					haveData = _clients[fd]->haveData();
 				}
 				int	fdKilled = _irc.getFdKilled();
+				if (_irc.getServerKilled())
+					return ;
 				if (fdKilled != -1)
 					_clientsOFF.push_back(fdKilled);
 				if (disconnect)
@@ -166,6 +171,8 @@ void	Server::run() {
 		//	recv
 		fdsSelected = selectFd();
 		recvAndMakeReply(fdsSelected);
+		if (_irc.getServerKilled())
+			return ;
 		
 
 		//	send

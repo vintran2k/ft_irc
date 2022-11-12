@@ -1,6 +1,10 @@
 #include "Irc.hpp"
 
-Irc::Irc(std::string const & password) : _password(password), _startTime(getTime()), _fdKilled(-1)
+Irc::Irc(std::string const & password) :
+	_password(password),
+	_startTime(getTime()),
+	_fdKilled(-1),
+	_serverKilled(false)
 {
 	_initCmds();
 }
@@ -18,50 +22,52 @@ Irc::~Irc() {
 	_channels.clear();
 }
 
-void	Irc::_initCmds() {
+void				Irc::_initCmds() {
 
 	_cmdNames[0] = "AWAY";
-	_cmdNames[1] = "INVITE";
-	_cmdNames[2] = "JOIN";
-	_cmdNames[3] = "KICK";
-	_cmdNames[4] = "KILL";
-	_cmdNames[5] = "LIST";
-	_cmdNames[6] = "MODE";
-	_cmdNames[7] = "NAMES";
-	_cmdNames[8] = "NICK";
-	_cmdNames[9] = "NOTICE";
-	_cmdNames[10] = "OPER";
-	_cmdNames[11] = "PART";
-	_cmdNames[12] = "PASS";
-	_cmdNames[13] = "PING";
-	_cmdNames[14] = "PRIVMSG";
-	_cmdNames[15] = "QUIT";
-	_cmdNames[16] = "TOPIC";
-	_cmdNames[17] = "USER";
-	_cmdNames[18] = "WHO";
+	_cmdNames[1] = "DIE";
+	_cmdNames[2] = "INVITE";
+	_cmdNames[3] = "JOIN";
+	_cmdNames[4] = "KICK";
+	_cmdNames[5] = "KILL";
+	_cmdNames[6] = "LIST";
+	_cmdNames[7] = "MODE";
+	_cmdNames[8] = "NAMES";
+	_cmdNames[9] = "NICK";
+	_cmdNames[10] = "NOTICE";
+	_cmdNames[11] = "OPER";
+	_cmdNames[12] = "PART";
+	_cmdNames[13] = "PASS";
+	_cmdNames[14] = "PING";
+	_cmdNames[15] = "PRIVMSG";
+	_cmdNames[16] = "QUIT";
+	_cmdNames[17] = "TOPIC";
+	_cmdNames[18] = "USER";
+	_cmdNames[19] = "WHO";
 
 	_cmds[0] = &Irc::_AWAY;
-	_cmds[1] = &Irc::_INVITE;
-	_cmds[2] = &Irc::_JOIN;
-	_cmds[3] = &Irc::_KICK;
-	_cmds[4] = &Irc::_KILL;
-	_cmds[5] = &Irc::_LIST;
-	_cmds[6] = &Irc::_MODE;
-	_cmds[7] = &Irc::_NAMES;
-	_cmds[8] = &Irc::_NICK;
-	_cmds[9] = &Irc::_NOTICE;
-	_cmds[10] = &Irc::_OPER;
-	_cmds[11] = &Irc::_PART;
-	_cmds[12] = &Irc::_PASS;
-	_cmds[13] = &Irc::_PING;
-	_cmds[14] = &Irc::_PRIVMSG;
-	_cmds[15] = &Irc::_QUIT;
-	_cmds[16] = &Irc::_TOPIC;
-	_cmds[17] = &Irc::_USER;
-	_cmds[18] = &Irc::_WHO;
+	_cmds[1] = &Irc::_DIE;
+	_cmds[2] = &Irc::_INVITE;
+	_cmds[3] = &Irc::_JOIN;
+	_cmds[4] = &Irc::_KICK;
+	_cmds[5] = &Irc::_KILL;
+	_cmds[6] = &Irc::_LIST;
+	_cmds[7] = &Irc::_MODE;
+	_cmds[8] = &Irc::_NAMES;
+	_cmds[9] = &Irc::_NICK;
+	_cmds[10] = &Irc::_NOTICE;
+	_cmds[11] = &Irc::_OPER;
+	_cmds[12] = &Irc::_PART;
+	_cmds[13] = &Irc::_PASS;
+	_cmds[14] = &Irc::_PING;
+	_cmds[15] = &Irc::_PRIVMSG;
+	_cmds[16] = &Irc::_QUIT;
+	_cmds[17] = &Irc::_TOPIC;
+	_cmds[18] = &Irc::_USER;
+	_cmds[19] = &Irc::_WHO;
 }
 
-void	Irc::addUser(Client & client) {
+void				Irc::addUser(Client & client) {
 
 	int	clientFd = client.getFd();
 
@@ -70,7 +76,7 @@ void	Irc::addUser(Client & client) {
 		_users[clientFd]->_isPassOk = true;
 }
 
-void	Irc::_deleteUserFromChannel(User *user, Channel *channel)
+void				Irc::_deleteUserFromChannel(User *user, Channel *channel)
 {
 	user->_channels.erase(channel);
 	channel->_deleteUser(user);
@@ -81,7 +87,7 @@ void	Irc::_deleteUserFromChannel(User *user, Channel *channel)
 	}
 }
 
-void	Irc::disconnectUser(int const fd) {
+void				Irc::disconnectUser(int const fd) {
 
 	if (_users.find(fd) != _users.end())
 	{
@@ -103,7 +109,7 @@ void	Irc::disconnectUser(int const fd) {
 	}
 }
 
-User *	Irc::_findUser(std::string const & nickname) {
+User *					Irc::_findUser(std::string const & nickname) {
 
 	mapIt(int, User *)	it;
 	for (it = _users.begin(); it != _users.end(); it++)
@@ -114,7 +120,7 @@ User *	Irc::_findUser(std::string const & nickname) {
 	return NULL;
 }
 
-Channel *	Irc::_findChannel(std::string const & name) {
+Channel *				Irc::_findChannel(std::string const & name) {
 
 	mapIt(std::string, Channel *)	it;
 
@@ -125,22 +131,22 @@ Channel *	Irc::_findChannel(std::string const & name) {
 		return NULL;
 }
 
-Channel *	Irc::_addNewChannel(std::string const & name, User * user) {
+Channel *				Irc::_addNewChannel(std::string const & name, User * user) {
 
 	Channel *	channel = new Channel(name, user);
 	_channels.insert(std::make_pair(name, channel));
 	return channel;
 }
 
-int		Irc::_findCommand(std::string & cmd) {
+int						Irc::_findCommand(std::string & cmd) {
 
-	for (int i = 0; i < 19; i++)
+	for (int i = 0; i < 20; i++)
 		if (cmd == _cmdNames[i])
 			return i;
 	return -1;
 }
 
-bool		Irc::_isCommonChannel(User * a, User * b) const {
+bool					Irc::_isCommonChannel(User * a, User * b) const {
 
 	for (setIt(Channel *) it = a->_channels.begin(); it != a->_channels.end(); it ++)
 		if (b->_channels.find(*it) != b->_channels.end())
@@ -148,12 +154,16 @@ bool		Irc::_isCommonChannel(User * a, User * b) const {
 	return false;
 }
 
-int		Irc::getFdKilled() {
+int						Irc::getFdKilled() {
 
 	int	ret = _fdKilled;
 	_fdKilled = -1;
 	return ret;
 }
+
+bool					Irc::getServerKilled() const { return _serverKilled; }
+
+std::string const &		Irc::getKiller() const { return _killer; }
 
 bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
 
