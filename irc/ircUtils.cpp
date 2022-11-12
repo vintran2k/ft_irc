@@ -64,6 +64,5 @@ bool				maskCmp(std::string const mask, std::string const s) {
 		}
 		return true;
 	}
-	std::cout << "F3\n";
 	return false;
 }
