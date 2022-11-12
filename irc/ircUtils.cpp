@@ -44,7 +44,6 @@ bool				maskCmp(std::string const mask, std::string const s) {
 
 	size_t	pos;
 
-	std::cout << "m = " << mask << " s = " << s << std::endl;
 	if (mask == s)
 		return true;
 
