@@ -1,53 +1,50 @@
 NAME			=	ircserv
 
-
-MAIN			=	main.cpp
-SRCS_NETWORK	=	Socket.cpp		\
-					Server.cpp		\
-					Client.cpp
-SRCS_IRC		=	Irc.cpp			\
-					User.cpp		\
-					Channel.cpp		\
-					ircUtils.cpp
-SRCS_CMD		=	AWAY.cpp		\
-					DIE.cpp			\
-					INVITE.cpp		\
-					JOIN.cpp		\
-					KICK.cpp		\
-					KILL.cpp		\
-					LIST.cpp		\
-					MODE.cpp		\
-					NAMES.cpp		\
-					NICK.cpp		\
-					NOTICE.cpp		\
-					OPER.cpp		\
-					PART.cpp		\
-					PASS.cpp		\
-					PING.cpp		\
-					PRIVMSG.cpp		\
-					QUIT.cpp		\
-					TOPIC.cpp		\
-					USER.cpp		\
-					WHO.cpp
+SRCS			=	main.cpp					\
+					network/Socket.cpp			\
+					network/Server.cpp			\
+					network/Client.cpp			\
+					irc/Irc.cpp					\
+					irc/User.cpp				\
+					irc/Channel.cpp				\
+					irc/ircUtils.cpp			\
+					irc/commands/AWAY.cpp		\
+					irc/commands/DIE.cpp		\
+					irc/commands/INVITE.cpp		\
+					irc/commands/JOIN.cpp		\
+					irc/commands/KICK.cpp		\
+					irc/commands/KILL.cpp		\
+					irc/commands/LIST.cpp		\
+					irc/commands/MODE.cpp		\
+					irc/commands/NAMES.cpp		\
+					irc/commands/NICK.cpp		\
+					irc/commands/NOTICE.cpp		\
+					irc/commands/OPER.cpp		\
+					irc/commands/PART.cpp		\
+					irc/commands/PASS.cpp		\
+					irc/commands/PING.cpp		\
+					irc/commands/PRIVMSG.cpp	\
+					irc/commands/QUIT.cpp		\
+					irc/commands/TOPIC.cpp		\
+					irc/commands/USER.cpp		\
+					irc/commands/WHO.cpp
 
 
 CC				=	@c++
 FLAGS			=	-Wall -Wextra -Werror -std=c++98 -g #// -g a enlever
 OBJDIR			=	objs
-OBJS			=	$(MAIN:.cpp=.o)									\
-					$(addprefix network/, $(SRCS_NETWORK:.cpp=.o))	\
-					$(addprefix irc/, $(SRCS_IRC:.cpp=.o))		\
-					$(addprefix irc/commands/, $(SRCS_CMD:.cpp=.o))
+OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
 
-.cpp.o			:
+$(OBJDIR)/%.o	:	%.cpp
+				@mkdir -p $(OBJDIR)/network
+				@mkdir -p $(OBJDIR)/irc
+				@mkdir -p $(OBJDIR)/irc/commands
 				$(CC) $(FLAGS) -c $< -o $@
 
 
 $(NAME)			:	$(OBJS)
 				$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-				@mkdir -p $(OBJDIR)
-				@mv $(OBJS) $(OBJDIR)
 				@echo "\033[1;30m[$(NAME)] \033[1;32mcreated !\033[0m"
 
 all				:	$(NAME)
