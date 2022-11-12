@@ -11,15 +11,25 @@ bool	agrsParsing(int ac, char **av, int &port, std::string &password) {
 		return false;
 	}
 
+	bool	validPort = true;
+
+	for (size_t i = 0; av[1][i]; i++)
+		if (!isdigit(av[1][i]))
+			validPort = false;
+
 	port = std::atoi(av[1]);
 	if (port <= 0 || port > 65535)
+		validPort = false;
+
+	if (!validPort)
 	{
-		std::cerr	<< BRED << "Invalid port [" << port << "].\n"
-					<< "Port 1 to 65535 are available" << WHITE << std::endl;
+		std::cerr	<< BRED << "Invalid port [" << av[1] << "]"
+					<< WHITE "\t(Port [1] to [65535] are available)" << std::endl;
 		return false;
 	}
 
 	password = std::string(av[2]);
+
 	return true;
 }
 
