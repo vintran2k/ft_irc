@@ -55,7 +55,7 @@
 //	366
 #define RPL_ENDOFNAMES(nick, chan)					RPL_PREFIX("366", nick) + " " + chan + " :End of /NAMES list" + CLRF // .?
 
-//  381
+//	381
 #define RPL_YOUREOPER(nick)							RPL_PREFIX("381", nick) + " :You are now an IRC operator" + CLRF
 
 //	401
@@ -103,7 +103,7 @@
 //	462
 #define ERR_ALREADYREGISTRED(nick)					RPL_PREFIX("462", nick) + " :Unauthorized command (already registered)" + CLRF
 
-//  464
+//	464
 #define ERR_PASSWDMISMATCH(nick)					RPL_PREFIX("464", nick) + " :Password incorrect" + CLRF
 
 //	471
@@ -115,7 +115,7 @@
 //	475
 #define ERR_BADCHANNELKEY(nick, chan)				RPL_PREFIX("475", nick) + " :" + chan + " :Cannot join channel (+k)" + CLRF
 
-// 481
+//	481
 #define ERR_NOPRIVILEGES(nick)					RPL_PREFIX("481", nick) + " :Permission Denied- You're not an IRC operator" + CLRF
 
 //	482
