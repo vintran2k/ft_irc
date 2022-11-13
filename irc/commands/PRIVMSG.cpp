@@ -22,7 +22,7 @@ void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_r
 			Channel	*channel = _findChannel(target);
 			if (!channel)
 				serverReply.push_back(std::make_pair(user._fd, ERR_NOSUCHCHANNEL(user._nickName, target)));
-			else if (!channel->_isInChannel(&user))
+			else if (!channel->_isInChannel(&user) && channel->_noExt)
 				serverReply.push_back(std::make_pair(user._fd, ERR_CANNOTSENDTOCHAN(user._nickName, target)));
 			else
 				_replyToUsers(user._fd, channel->_users, serverReply, user._prefix + " PRIVMSG " + target + " " + text + CLRF);

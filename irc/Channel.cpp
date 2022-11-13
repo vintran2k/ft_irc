@@ -4,6 +4,7 @@ Channel::Channel(std::string const & name, User * admin) :
 	_name(name),
 	_inviteOnly(false),
 	_topicForOp(true),
+	_noExt(true),
 	_limit(-1)
 {
 	if (admin)
@@ -106,6 +107,8 @@ void			Channel::_getModes(User * user, std::string & modes, std::string & params
 		modes += 'l';
 		params += params.empty() ? limit : " " + limit;
 	}
+	if (_noExt)
+		modes += 'n';
 	if (_topicForOp)
 		modes += 't';
 }
@@ -159,6 +162,11 @@ int				Channel::_setMode(char mode, std::string const & param, std::string &err)
 		_limit = limit;
 		return 0;
 	}
+	else if (mode == 'n' && !_noExt)
+	{
+		_noExt = true;
+		return 0;
+	}
 	else if (mode == 'o')
 	{
 		User *	target = NULL;
@@ -209,6 +217,11 @@ int				Channel::_unsetMode(char mode, std::string const & param, std::string &er
 	else if (mode == 'l' && _limit != -1)
 	{
 		_limit = -1;
+		return 0;
+	}
+	else if (mode == 'n' && _noExt)
+	{
+		_noExt = false;
 		return 0;
 	}
 	else if (mode == 'o')

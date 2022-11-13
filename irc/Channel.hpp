@@ -3,7 +3,7 @@
 #include "../inc/includes.hpp"
 #include "User.hpp"
 
-#define CHANNEL_MODES	"iklot"
+#define CHANNEL_MODES	"iklnot"
 
 class User;
 
@@ -29,6 +29,7 @@ class Channel {
 		std::string				_key;
 		bool					_inviteOnly;
 		bool					_topicForOp;
+		bool					_noExt;
 		int						_limit;
 
 		int				_addUser(User * user, std::string const key);
