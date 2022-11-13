@@ -67,4 +67,7 @@ class Irc {
 		void	_TOPIC(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_USER(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
+
+		void	_channelMODE(User & user, std::vector<t_reply> & serverReply, std::string const & target, std::string const & modes, std::vector<std::string> const & modeParams);
+		void	_userMODE(User & user, std::vector<t_reply> & serverReply, std::string const & target, std::string const & modes);
 };

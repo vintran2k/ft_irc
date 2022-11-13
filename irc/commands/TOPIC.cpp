@@ -20,7 +20,7 @@ void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::vector<t_rep
 		{
 			if (!channel->_isInChannel(&user))
 				serverReply.push_back(std::make_pair(user._fd, ERR_NOTONCHANNEL(user._nickName, channel->_name)));
-			else if (!channel->_isOperator(&user))
+			else if (channel->_topicForOp && !channel->_isOperator(&user))
 				serverReply.push_back(std::make_pair(user._fd, ERR_CHANOPRIVSNEEDED(user._nickName, channel->_name)));
 			else
 			{

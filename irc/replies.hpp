@@ -37,6 +37,9 @@
 //	323
 #define RPL_LISTEND(nick)							RPL_PREFIX("323", nick) + " :End of LIST" + CLRF
 
+//	324
+#define RPL_CHANNELMODEIS(nick, chan, m, p)			RPL_PREFIX("324", nick) + " " + chan + " :" + m + " " + p + CLRF
+
 //	331
 #define RPL_NOTOPIC(nick, chan)						RPL_PREFIX("331", nick) + " " + chan + " :No topic is set" + CLRF
 
@@ -109,6 +112,9 @@
 //	471
 #define ERR_CHANNELISFULL(nick, chan)				RPL_PREFIX("471", nick) + " :" + chan + " :Cannot join channel (+l)" + CLRF
 
+//	472
+#define ERR_UNKNOWNMODE(nick, mode, chan)			RPL_PREFIX("472", nick) + " " + mode + " :is unknown mode char to me for " + chan + CLRF
+
 //	473
 #define ERR_INVITEONLYCHAN(nick, chan)				RPL_PREFIX("473", nick) + " :" + chan + " :Cannot join channel (+i)" + CLRF
 
@@ -116,10 +122,13 @@
 #define ERR_BADCHANNELKEY(nick, chan)				RPL_PREFIX("475", nick) + " :" + chan + " :Cannot join channel (+k)" + CLRF
 
 //	481
-#define ERR_NOPRIVILEGES(nick)					RPL_PREFIX("481", nick) + " :Permission Denied- You're not an IRC operator" + CLRF
+#define ERR_NOPRIVILEGES(nick)						RPL_PREFIX("481", nick) + " :Permission Denied- You're not an IRC operator" + CLRF
 
 //	482
-#define ERR_CHANOPRIVSNEEDED(nick, chan)		RPL_PREFIX("482", nick) + " " + chan + " :You're not channel operator" + CLRF
+#define ERR_CHANOPRIVSNEEDED(nick, chan)			RPL_PREFIX("482", nick) + " " + chan + " :You're not channel operator" + CLRF
 
 //	483
-#define ERR_CANTKILLSERVER(nick)				RPL_PREFIX("483", nick) + " :You can't kill a server!" + CLRF
+#define ERR_CANTKILLSERVER(nick)					RPL_PREFIX("483", nick) + " :You can't kill a server!" + CLRF
+
+//	696
+#define ERR_INVALIDMODEPARAM(nick, t, m, p, d)		RPL_PREFIX("696", nick) + " " + t + " " + m + " " + p + " :" + d + CLRF
