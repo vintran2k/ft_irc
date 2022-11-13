@@ -3,6 +3,28 @@
 
 Server	*IrcServer = NULL;
 
+void	ircDraw() {
+
+	std::cout << BIBLUE
+	<<	"																			" 	<< std::endl
+	<<	"	                   ,----,												"	<< std::endl
+	<<	"	                 ,/   .`|												"	<< std::endl
+	<<	"	    ,---,.     ,`   .'  :             ,---, ,-.----.      ,----..		"	<< std::endl
+	<<	"	  ,'  .' |   ;    ;     /          ,`--.' | \\    /  \\    /   /   \\	"	<< std::endl
+	<<	"	,---.'   | .'___,/    ,'           |   :  : ;   :    \\  |   :     :	"	<< std::endl
+	<<	"	|   |   .' |    :     |            :   |  ' |   | .\\ :  .   |  ;. /	"	<< std::endl
+	<<	"	:   :  :   ;    |.';  ;            |   :  | .   : |: |  .   ; /--`		"	<< std::endl
+	<<	"	:   |  |-, `----'  |  |            '   '  ; |   |  \\ :  ;   | ;		"	<< std::endl
+	<<	"	|   :  ;/|     '   :  ;            |   |  | |   : .  /  |   : |			"	<< std::endl
+	<<	"	|   |   .'     |   |  '            '   :  ; ;   | |  \\  .   | '___		"	<< std::endl
+	<<	"	'   :  '       '   :  |       ___  |   |  ' |   | ;\\  \\ '   ; : .'|	"	<< std::endl
+	<<	"	|   |  |       ;   |.'     .'  .`| '   :  | :   ' | \\.' '   | '/  :	"	<< std::endl
+	<<	"	|   :  \\       '---'    .'  .'   : ;   |.'  :   : :-'   |   :    /		"	<< std::endl
+	<<	"	|   | ,'             ,---, '   .'  '---'    |   |.'      \\   \\ .'		"	<< std::endl
+	<<	"	`----'               ;   |  .'              `---'         `---`			"	<< std::endl
+	<<	"	                     `---'											\n\n"	<< WHITE << std::endl;
+}
+
 bool	agrsParsing(int ac, char **av, int &port, std::string &password) {
 
 	if (ac != 3)
@@ -54,6 +76,8 @@ int	main(int ac, char **av) {
 
 	if (!agrsParsing(ac, av, port, password))
 		return 1;
+	
+	ircDraw();
 
 	signal(SIGINT, signalExit);
 	signal(SIGQUIT, signalExit);

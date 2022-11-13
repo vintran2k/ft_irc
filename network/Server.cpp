@@ -30,26 +30,7 @@ Server::Server(int port, std::string const & password) :
 	//	Listen for connections
 	_socket.listen(MAX_CONNECTIONS);
 
-	std::cout																			<< BIBLUE
-	<<	"																			" 	<< std::endl
-	<<	"	                   ,----,												"	<< std::endl
-	<<	"	                 ,/   .`|												"	<< std::endl
-	<<	"	    ,---,.     ,`   .'  :             ,---, ,-.----.      ,----..		"	<< std::endl
-	<<	"	  ,'  .' |   ;    ;     /          ,`--.' | \\    /  \\    /   /   \\	"	<< std::endl
-	<<	"	,---.'   | .'___,/    ,'           |   :  : ;   :    \\  |   :     :	"	<< std::endl
-	<<	"	|   |   .' |    :     |            :   |  ' |   | .\\ :  .   |  ;. /	"	<< std::endl
-	<<	"	:   :  :   ;    |.';  ;            |   :  | .   : |: |  .   ; /--`		"	<< std::endl
-	<<	"	:   |  |-, `----'  |  |            '   '  ; |   |  \\ :  ;   | ;		"	<< std::endl
-	<<	"	|   :  ;/|     '   :  ;            |   |  | |   : .  /  |   : |			"	<< std::endl
-	<<	"	|   |   .'     |   |  '            '   :  ; ;   | |  \\  .   | '___		"	<< std::endl
-	<<	"	'   :  '       '   :  |       ___  |   |  ' |   | ;\\  \\ '   ; : .'|	"	<< std::endl
-	<<	"	|   |  |       ;   |.'     .'  .`| '   :  | :   ' | \\.' '   | '/  :	"	<< std::endl
-	<<	"	|   :  \\       '---'    .'  .'   : ;   |.'  :   : :-'   |   :    /		"	<< std::endl
-	<<	"	|   | ,'             ,---, '   .'  '---'    |   |.'      \\   \\ .'		"	<< std::endl
-	<<	"	`----'               ;   |  .'              `---'         `---`			"	<< std::endl
-	<<	"	                     `---'											\n\n"	<< std::endl
-	<< LOGPREFIX << BIGREEN << "Server started on port " << port << "\n" << WHITE << std::endl;
-
+	std::cout << LOGPREFIX << BIGREEN << "Server started on port " << port << "\n" << WHITE << std::endl;
 }
 
 Server::~Server() {
@@ -76,6 +57,7 @@ void	Server::connectClient() {
 	sockaddr_in	addr;
 	socklen_t	addrLen = 0;
 
+	//	Connect client to server
 	int	fdClient = accept(_socket.getFd(), (sockaddr *)&addr, &addrLen);
 	if (fdClient == -1)
 		throw std::runtime_error("accept() failed");
@@ -97,8 +79,8 @@ void	Server::deleteClient(int const fd) {
 
 int		Server::selectFd() {
 
+	//	Create a list with server fd and all clients fd
 	int	fd = _socket.getFd();
-
 	_fdMin = fd;
 	_fdMax = fd;
 	FD_ZERO(&_readFds);
@@ -115,6 +97,7 @@ int		Server::selectFd() {
 			_fdMin = fd;
 	}
 
+	//	Select all fd available for reading
 	int	ret = select(_fdMax + 1, &_readFds, NULL, NULL, NULL);
 	if (ret == -1)
 		throw std::runtime_error("select() failed");
@@ -123,22 +106,27 @@ int		Server::selectFd() {
 
 void	Server::recvAndMakeReply(int fdsSelected) {
 
+	//	Loop on the set of available fd
 	for (int fd = _fdMin; fd <= _fdMax && fdsSelected; fd++)
 	{
 		if (FD_ISSET(fd, &_readFds))
 		{
+			//	Connect new client on server fd
 			if (fd == _socket.getFd())
 				connectClient();
 			else
 			{
+				//	Read the received data on client fd
 				bool	haveData = true;
 				bool	isRead = false;
 				bool	disconnect = false;
 				while (haveData)
 				{
 					isRead = _clients[fd]->readFd();
+					//	Get reply from Irc
 					if (isRead)
 						disconnect = _irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
+					//	If no data after recv(): client is disconnected
 					else if (_clients[fd]->getReadBuffer().empty())	// sauf ctrlD // ctrlC pb
 					{
 						_irc.disconnectUser(fd);
@@ -147,6 +135,7 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 					}
 					haveData = _clients[fd]->haveData();
 				}
+				//	Check for commands QUIT, KILL, DIE
 				int	fdKilled = _irc.getFdKilled();
 				if (_irc.getServerKilled())
 					return ;
@@ -166,14 +155,14 @@ void	Server::run() {
 
 	while (1)
 	{
-		//	recv
+		//	Receive data form clients and make reply from Irc
 		fdsSelected = selectFd();
 		recvAndMakeReply(fdsSelected);
 		if (_irc.getServerKilled())
 			return ;
 		
 
-		//	send
+		//	Send reply to clients
 		vectorIt(t_reply)	it;
 		for (it = _serverReply.begin(); it != _serverReply.end(); it++)
 		{
@@ -185,6 +174,7 @@ void	Server::run() {
 			}
 		}
 
+		//	Delete disconnected clients
 		for (vectorIt(int) it = _clientsOFF.begin(); it != _clientsOFF.end(); it++)
 			deleteClient(*it);
 
