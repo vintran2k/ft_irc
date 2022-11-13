@@ -16,6 +16,7 @@ SRCS			=	main.cpp					\
 					irc/commands/KILL.cpp		\
 					irc/commands/LIST.cpp		\
 					irc/commands/MODE.cpp		\
+					irc/commands/MOTD.cpp		\
 					irc/commands/NAMES.cpp		\
 					irc/commands/NICK.cpp		\
 					irc/commands/NOTICE.cpp		\

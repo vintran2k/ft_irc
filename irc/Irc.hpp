@@ -29,14 +29,16 @@ class Irc {
 		Irc &	operator=(Irc const & rhs);
 
 		std::string const					_password;
-		std::string							_cmdNames[20];
-		void								(Irc::*_cmds[20])(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
+		std::set<std::string>				_ircCmds;
+		std::string							_cmdNames[21];
+		void								(Irc::*_cmds[21])(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		std::map<int, User *>				_users;
 		std::map<std::string, Channel *>	_channels;
 		std::string const					_startTime;
 		int									_fdKilled;
 		bool								_serverKilled;
 		std::string							_killer;
+		std::vector<std::string>			_motd;
 
 		void		_initCmds();
 		int			_findCommand(std::string & cmd);
@@ -55,6 +57,7 @@ class Irc {
 		void	_KILL(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_LIST(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_MODE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
+		void	_MOTD(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_NAMES(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);
 		void	_NOTICE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply);

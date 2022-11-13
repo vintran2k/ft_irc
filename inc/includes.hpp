@@ -17,6 +17,7 @@
 #include <fcntl.h>
 #include <ctime>
 #include <signal.h>
+#include <fstream>
 
 #include "colors.hpp"
 
@@ -40,6 +41,7 @@ typedef std::pair<int, std::string>		t_reply;
 #define ADMIN_USERNAME		"admin"
 #define ADMIN_PASSWORD		"adminPass"
 
+void				getAllIrcCommands(std::set<std::string> & ircCommands);
 void				split(std::vector<std::string> & res, std::string str, std::string const & delimiter);
 std::string			appendParams(std::vector<std::string> const & sCmd, std::vector<std::string>::const_iterator begin);
 std::string const	getTime();

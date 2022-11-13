@@ -66,3 +66,16 @@ bool				maskCmp(std::string const mask, std::string const s) {
 	}
 	return false;
 }
+
+void	getAllIrcCommands(std::set<std::string> & ircCommands) {
+
+	std::ifstream	cmdsFile("./irc/irc_commands");
+
+	if (!cmdsFile.is_open())
+		throw std::runtime_error("open() failed");
+
+	std::string		line;
+	while (std::getline(cmdsFile, line))
+		ircCommands.insert(line);
+	cmdsFile.close();
+}

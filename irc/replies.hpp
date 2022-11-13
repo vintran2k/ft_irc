@@ -58,6 +58,15 @@
 //	353
 #define RPL_NAMREPLY(nick, chan, names)				RPL_PREFIX("353", nick) + " = " + chan + " :" + names + CLRF
 
+//	372
+#define RPL_MOTD(nick, text)						RPL_PREFIX("372", nick) + " :- " + text + CLRF
+
+//	375
+#define RPL_MOTDSTART(nick)							RPL_PREFIX("375", nick) + " :- " + SERVER_HOSTNAME + " Message of the day -" + CLRF
+
+//	376
+#define RPL_ENDOFMOTD(nick)							RPL_PREFIX("376", nick) + " :End of message of the day." + CLRF
+
 //	366
 #define RPL_ENDOFNAMES(nick, chan)					RPL_PREFIX("366", nick) + " " + chan + " :End of /NAMES list" + CLRF
 
@@ -81,6 +90,9 @@
 
 //	421
 #define ERR_UNKNOWNCOMMAND(nick, command)			RPL_PREFIX("421", nick) + " :" + command + " :Unknown command" + CLRF
+
+//	422
+#define ERR_NOMOTD(nick)							RPL_PREFIX("422", nick) + " :MOTD File is missing" + CLRF
 
 //	431
 #define ERR_NONICKNAMEGIVEN(nick)					RPL_PREFIX("431", nick) + " :No nickname given" + CLRF

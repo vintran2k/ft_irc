@@ -24,6 +24,8 @@ Irc::~Irc() {
 
 void				Irc::_initCmds() {
 
+	getAllIrcCommands(_ircCmds);
+
 	_cmdNames[0] = "AWAY";
 	_cmdNames[1] = "DIE";
 	_cmdNames[2] = "INVITE";
@@ -32,18 +34,19 @@ void				Irc::_initCmds() {
 	_cmdNames[5] = "KILL";
 	_cmdNames[6] = "LIST";
 	_cmdNames[7] = "MODE";
-	_cmdNames[8] = "NAMES";
-	_cmdNames[9] = "NICK";
-	_cmdNames[10] = "NOTICE";
-	_cmdNames[11] = "OPER";
-	_cmdNames[12] = "PART";
-	_cmdNames[13] = "PASS";
-	_cmdNames[14] = "PING";
-	_cmdNames[15] = "PRIVMSG";
-	_cmdNames[16] = "QUIT";
-	_cmdNames[17] = "TOPIC";
-	_cmdNames[18] = "USER";
-	_cmdNames[19] = "WHO";
+	_cmdNames[8] = "MOTD";
+	_cmdNames[9] = "NAMES";
+	_cmdNames[10] = "NICK";
+	_cmdNames[11] = "NOTICE";
+	_cmdNames[12] = "OPER";
+	_cmdNames[13] = "PART";
+	_cmdNames[14] = "PASS";
+	_cmdNames[15] = "PING";
+	_cmdNames[16] = "PRIVMSG";
+	_cmdNames[17] = "QUIT";
+	_cmdNames[18] = "TOPIC";
+	_cmdNames[19] = "USER";
+	_cmdNames[20] = "WHO";
 
 	_cmds[0] = &Irc::_AWAY;
 	_cmds[1] = &Irc::_DIE;
@@ -53,18 +56,19 @@ void				Irc::_initCmds() {
 	_cmds[5] = &Irc::_KILL;
 	_cmds[6] = &Irc::_LIST;
 	_cmds[7] = &Irc::_MODE;
-	_cmds[8] = &Irc::_NAMES;
-	_cmds[9] = &Irc::_NICK;
-	_cmds[10] = &Irc::_NOTICE;
-	_cmds[11] = &Irc::_OPER;
-	_cmds[12] = &Irc::_PART;
-	_cmds[13] = &Irc::_PASS;
-	_cmds[14] = &Irc::_PING;
-	_cmds[15] = &Irc::_PRIVMSG;
-	_cmds[16] = &Irc::_QUIT;
-	_cmds[17] = &Irc::_TOPIC;
-	_cmds[18] = &Irc::_USER;
-	_cmds[19] = &Irc::_WHO;
+	_cmds[8] = &Irc::_MOTD;
+	_cmds[9] = &Irc::_NAMES;
+	_cmds[10] = &Irc::_NICK;
+	_cmds[11] = &Irc::_NOTICE;
+	_cmds[12] = &Irc::_OPER;
+	_cmds[13] = &Irc::_PART;
+	_cmds[14] = &Irc::_PASS;
+	_cmds[15] = &Irc::_PING;
+	_cmds[16] = &Irc::_PRIVMSG;
+	_cmds[17] = &Irc::_QUIT;
+	_cmds[18] = &Irc::_TOPIC;
+	_cmds[19] = &Irc::_USER;
+	_cmds[20] = &Irc::_WHO;
 }
 
 void				Irc::addUser(Client & client) {
@@ -140,7 +144,7 @@ Channel *				Irc::_addNewChannel(std::string const & name, User * user) {
 
 int						Irc::_findCommand(std::string & cmd) {
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 21; i++)
 		if (cmd == _cmdNames[i])
 			return i;
 	return -1;
@@ -176,11 +180,12 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	split(sCmd, cmd, " \n\r");
 	if (sCmd[0].empty())
 		return false;
+	std::transform(sCmd[0].begin(), sCmd[0].end(), sCmd[0].begin(), ::toupper);
 	user = _users[fdClient];
 	cmdIndex = _findCommand(sCmd[0]);
-	if (cmdIndex == -1)
+	if (_ircCmds.find(sCmd[0]) == _ircCmds.end())
 		serverReply.push_back(std::make_pair(fdClient, ERR_UNKNOWNCOMMAND(user->_nickName, *sCmd.begin())));
-	else
+	else if (cmdIndex != -1)
 	{
 		if (sCmd[0] != "PASS" && !user->_isPassOk)
 			return false;
@@ -202,6 +207,7 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 			serverReply.push_back(std::make_pair(fdClient, RPL_YOURHOST(user->_nickName)));
 			serverReply.push_back(std::make_pair(fdClient, RPL_CREATED(user->_nickName, _startTime)));
 			serverReply.push_back(std::make_pair(fdClient, RPL_MYINFO(user->_nickName)));
+			_MOTD(*user, sCmd, serverReply);
 		}
 	}
 	return false;
