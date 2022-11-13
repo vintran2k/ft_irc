@@ -18,28 +18,21 @@
 #include <ctime>
 #include <signal.h>
 #include <fstream>
-
 #include "colors.hpp"
 
+#define SERVER_NAME			"ft_irc.fr"
 #define SERVER_VERSION		"v4.2"
 #define	MAX_CONNECTIONS		10000
+#define ADMIN_USERNAME		"admin"
+#define ADMIN_PASSWORD		"adminPass"
 #define CHANNEL_MODES		"iklnot"
 #define USER_MODES			"io"
-#define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
-
+#define LOGPREFIX						CYAN << "[" << getTime() << "]" << "\t"
 
 #define vectorIt(type)					std::vector<type>::iterator
 #define mapIt(type1, type2)				std::map<type1, type2>::iterator
 #define setIt(type)						std::set<type>::iterator
-
 typedef std::pair<int, std::string>		t_reply;
-
-
-#define LOGPREFIX						CYAN << "[" << getTime() << "]" << "\t"
-
-
-#define ADMIN_USERNAME		"admin"
-#define ADMIN_PASSWORD		"adminPass"
 
 void				getAllIrcCommands(std::set<std::string> & ircCommands);
 void				split(std::vector<std::string> & res, std::string str, std::string const & delimiter);

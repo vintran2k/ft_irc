@@ -3,7 +3,7 @@
 #include "../inc/includes.hpp"
 
 #define CLRF							"\r\n"
-#define SERVER_HOSTNAME					std::string("ft_irc.fr")
+#define SERVER_HOSTNAME					std::string(SERVER_NAME)
 #define RPL_PREFIX(code, nick)			std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick)
 #define RPL_ERR(user, errMsg)			std::string("ERROR :Closing link: (" + user + ") [" + errMsg + "]")
 

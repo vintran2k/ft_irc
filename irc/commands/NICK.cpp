@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+#define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
+
 void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) { //	username ne change pas dans hexchat
 
 	std::string	nickName;
