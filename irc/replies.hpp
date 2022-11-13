@@ -89,7 +89,7 @@
 #define ERR_NICKNAMEINUSE(nick, errNick)			RPL_PREFIX("433", nick) + " " + errNick + " :Nickname is already in use" + CLRF
 
 //	441
-#define ERR_USERNOTINCHANNEL(nick, userNick, chan)	RPL_PREFIX("441", nick) + " " + nick + " " + chan + " :They aren't on that channel" + CLRF
+#define ERR_USERNOTINCHANNEL(nick, userNick, chan)	RPL_PREFIX("441", nick) + " " + chan + " " + userNick + " :They aren't on that channel" + CLRF
 
 //	442
 #define ERR_NOTONCHANNEL(nick, chan)				RPL_PREFIX("442", nick) + " :" + chan + " :You're not on that channel" + CLRF

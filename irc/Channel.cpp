@@ -99,9 +99,12 @@ void			Channel::_getModes(User * user, std::string & modes, std::string & params
 	if (_limit != -1)
 	{
 		std::stringstream	ss;
-		ss << "<" << _limit << ">";
+		std::string			limit;
+		ss << _limit;
+		ss >> limit;
+
 		modes += 'l';
-		ss >> params;
+		params += params.empty() ? limit : " " + limit;
 	}
 	if (_topicForOp)
 		modes += 't';
@@ -203,7 +206,7 @@ int				Channel::_unsetMode(char mode, std::string const & param, std::string &er
 		_key.clear();
 		return 0;
 	}
-	else if (mode == 'l')
+	else if (mode == 'l' && _limit != -1)
 	{
 		_limit = -1;
 		return 0;
