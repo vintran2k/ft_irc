@@ -40,8 +40,8 @@ class Channel {
 		int				_getVisibleValue() const;
 		void			_getModes(User * user, std::string & modes, std::string & params) const;
 		bool			_modeTakesParam(char mode, char sign, std::string & err);
-		int				_setMode(char mode, std::string const & param, std::string & err);
-		int				_unsetMode(char mode, std::string const & param, std::string &err);
+		int				_setMode(char const mode, std::string const & param, std::string & err);
+		int				_unsetMode(char const mode, std::string const & param, std::string &err);
 
 		friend class Irc;
 };

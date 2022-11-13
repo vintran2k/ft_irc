@@ -19,6 +19,9 @@
 //	004
 // #define RPL_MYINFO(nick)			
 
+//	221
+#define RPL_UMODEIS(nick, modes)					RPL_PREFIX("221", nick) + " :" + modes + CLRF
+
 //	301
 #define RPL_AWAY(nick, senderNick, msg)				RPL_PREFIX("301", nick) + " " + senderNick + " " + msg + CLRF
 
@@ -129,6 +132,12 @@
 
 //	483
 #define ERR_CANTKILLSERVER(nick)					RPL_PREFIX("483", nick) + " :You can't kill a server!" + CLRF
+
+//	501
+#define ERR_UMODEUNKNOWNFLAG(nick)					RPL_PREFIX("501", nick) + " :Unknown MODE flag" + CLRF
+
+//	502
+#define ERR_USERSDONTMATCH(nick)					RPL_PREFIX("502", nick) + " :Cannot change mode for other users" + CLRF
 
 //	696
 #define ERR_INVALIDMODEPARAM(nick, t, m, p, d)		RPL_PREFIX("696", nick) + " " + t + " " + m + " " + p + " :" + d + CLRF

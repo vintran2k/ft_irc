@@ -134,7 +134,7 @@ bool			Channel::_modeTakesParam(char mode, char sign, std::string & err) {
 	return false;
 }
 
-int				Channel::_setMode(char mode, std::string const & param, std::string &err) {
+int				Channel::_setMode(char const mode, std::string const & param, std::string &err) {
 
 	std::string	chanModes(CHANNEL_MODES);
 
@@ -192,7 +192,7 @@ int				Channel::_setMode(char mode, std::string const & param, std::string &err)
 	return -1;
 }
 
-int				Channel::_unsetMode(char mode, std::string const & param, std::string &err) {
+int				Channel::_unsetMode(char const mode, std::string const & param, std::string &err) {
 
 	std::string	chanModes(CHANNEL_MODES);
 

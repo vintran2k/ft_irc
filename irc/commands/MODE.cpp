@@ -2,10 +2,49 @@
 
 void	Irc::_userMODE(User & user, std::vector<t_reply> & serverReply, std::string const & target, std::string const & modes) {
 
-(void)user;
-(void)serverReply;
-(void)modes;
-(void)target;
+	if (user._nickName != target)
+	{
+		serverReply.push_back(std::make_pair(user._fd, ERR_USERSDONTMATCH(user._nickName)));
+		return ;
+	}
+	if (modes.empty())
+	{
+		std::string	m;
+		user._getModes(m);
+		if (!m.empty())
+		{
+			m.insert(0, "+");
+			serverReply.push_back(std::make_pair(user._fd, RPL_UMODEIS(user._nickName, m)));
+		}
+		return ;
+	}
+	size_t			i = 0;
+	char			sign = '+';
+	while (i < modes.size())
+	{
+		if (modes[i] == '+' || modes[i] == '-')
+		{
+			sign = modes[i] == '+' ? '+' : '-';
+			i++;
+		}
+		int	ret;
+		if (sign == '+')
+			ret = user._setMode(modes[i]);
+		else
+			ret = user._unsetMode(modes[i]);
+
+		if (ret == 1)
+			serverReply.push_back(std::make_pair(user._fd, ERR_UMODEUNKNOWNFLAG(user._nickName)));
+		else if (ret == 0)
+		{
+			std::string	signedMode;
+			signedMode.insert(0, 1, sign);
+			signedMode.insert(1, 1, modes[i]);
+
+			serverReply.push_back(std::make_pair(user._fd, user._prefix + " MODE " + user._nickName + " " + signedMode + CLRF));
+		}
+		i++;
+	}
 }
 
 void	Irc::_channelMODE(User & user, std::vector<t_reply> & serverReply, std::string const & target, std::string const & modes, std::vector<std::string> const & modeParams) {
@@ -46,10 +85,7 @@ void	Irc::_channelMODE(User & user, std::vector<t_reply> & serverReply, std::str
 	{
 		if (modes[i] == '+' || modes[i] == '-')
 		{
-			if (modes[i] == '+')
-				sign = '+';
-			else
-				sign = '-';
+			sign = modes[i] == '+' ? '+' : '-';
 			i++;
 		}
 		std::string		err, param;
@@ -69,7 +105,7 @@ void	Irc::_channelMODE(User & user, std::vector<t_reply> & serverReply, std::str
 				ret = channel->_setMode(modes[i], param, err);
 			else
 				ret = channel->_unsetMode(modes[i], param, err);
-			std::cout << "RET = " << ret << std::endl;
+
 			if (ret == 1)
 				serverReply.push_back(std::make_pair(user._fd, ERR_UNKNOWNMODE(user._nickName, modes[i], channel->_name)));
 			else if (ret == 2)
