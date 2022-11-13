@@ -59,7 +59,7 @@
 #define RPL_NAMREPLY(nick, chan, names)				RPL_PREFIX("353", nick) + " = " + chan + " :" + names + CLRF
 
 //	366
-#define RPL_ENDOFNAMES(nick, chan)					RPL_PREFIX("366", nick) + " " + chan + " :End of /NAMES list" + CLRF // .?
+#define RPL_ENDOFNAMES(nick, chan)					RPL_PREFIX("366", nick) + " " + chan + " :End of /NAMES list" + CLRF
 
 //	381
 #define RPL_YOUREOPER(nick)							RPL_PREFIX("381", nick) + " :You are now an IRC operator" + CLRF

@@ -74,7 +74,6 @@ int		Server::getPort() const { return _port; }
 void	Server::connectClient() {
 
 	sockaddr_in	addr;
-	// sockaddr_storage    addr;
 	socklen_t	addrLen = 0;
 
 	int	fdClient = accept(_socket.getFd(), (sockaddr *)&addr, &addrLen);
@@ -83,8 +82,7 @@ void	Server::connectClient() {
 
 	fcntl(fdClient, F_SETFL, O_NONBLOCK);
 
-	std::string	clientIp = inet_ntoa(((sockaddr_in *)&addr)->sin_addr); //
-	_clients.insert(std::make_pair(fdClient, new Client(fdClient, clientIp))); //
+	_clients.insert(std::make_pair(fdClient, new Client(fdClient)));
 	_irc.addUser(*_clients[fdClient]);
 }
 
@@ -176,14 +174,13 @@ void	Server::run() {
 		
 
 		//	send
-
 		vectorIt(t_reply)	it;
 		for (it = _serverReply.begin(); it != _serverReply.end(); it++)
 		{
 			int	fdClient = it->first;
 			if (_clients.find(fdClient) != _clients.end())
 			{
-				std::cout << "SEND = " << it->second << std::endl;
+				// std::cout << "SEND = " << it->second << std::endl;
 				_clients[fdClient]->send(it->second);
 			}
 		}

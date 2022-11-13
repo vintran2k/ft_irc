@@ -3,7 +3,7 @@
 void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) { //	username ne change pas dans hexchat
 
 	std::string	nickName;
-	std::string	validChar(VALIDCHAR);(void)user;//
+	std::string	validChar(VALIDCHAR);
 
 	if (sCmd.size() == 1)
 	{

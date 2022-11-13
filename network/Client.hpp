@@ -6,7 +6,7 @@ class Client {
 
 	public:
 
-		Client(int fd, std::string const & ip);
+		Client(int fd);
 		~Client();
 
 		int						getFd() const;
@@ -25,7 +25,6 @@ class Client {
 		Client &	operator=(Client const & rhs);
 
 		int	const					_fd;
-		std::string	const			_ip; //
 		std::string					_cmd;
 		std::string					_readBuffer;
 		size_t						_cmdSize;

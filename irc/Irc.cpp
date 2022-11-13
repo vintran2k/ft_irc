@@ -172,7 +172,7 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 	int							cmdIndex;
 	bool						isRegisterBefore;
 
-	std::cout << BCYAN << "RECV -->" << cmd << WHITE << std::endl;
+	// std::cout << BCYAN << "RECV -->" << cmd << WHITE << std::endl;
 	split(sCmd, cmd, " \n\r");
 	if (sCmd[0].empty())
 		return false;

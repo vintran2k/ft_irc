@@ -1,10 +1,9 @@
 #include "Client.hpp"
 
-Client::Client(int fd, std::string const & ip) : _fd(fd), _ip(ip)
+Client::Client(int fd) : _fd(fd)
 { 
 
 	std::cout << LOGPREFIX
-	// << BPURPLE << _ip //
 	<< GRAY << "Client on socket "
 	<< BIPURPLE <<  "[" << _fd << "]"
 	<< GREEN << " connected\n" << WHITE << std::endl;
@@ -14,7 +13,6 @@ Client::~Client() {
 
 	close(_fd);
 	std::cout << LOGPREFIX
-	// << BPURPLE << _ip //
 	<< GRAY << "Client on socket "
 	<< BIPURPLE <<  "[" << _fd << "]"
 	<< RED << " disconnected\n" << WHITE << std::endl;
