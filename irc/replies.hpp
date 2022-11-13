@@ -11,13 +11,13 @@
 #define RPL_WELCOME(nick, user, host)				RPL_PREFIX("001", nick) + " :Welcome to the ft_irc Network, " + nick + "!" + user + "@" + host + CLRF
 
 //	002
-#define RPL_YOURHOST(nick)							RPL_PREFIX("002", nick) + " :Your host is " + SERVER_HOSTNAME + ", running version v4.2" + CLRF
+#define RPL_YOURHOST(nick)							RPL_PREFIX("002", nick) + " :Your host is " + SERVER_HOSTNAME + ", running version " + SERVER_VERSION + CLRF
 
 //	003
 #define RPL_CREATED(nick, datetime)					RPL_PREFIX("003", nick) + " :This server was created " + datetime + CLRF
 
 //	004
-// #define RPL_MYINFO(nick)			
+#define RPL_MYINFO(nick)							RPL_PREFIX("004", nick) + " " + SERVER_HOSTNAME + " " + SERVER_VERSION + " " + USER_MODES + " " + CHANNEL_MODES + CLRF
 
 //	221
 #define RPL_UMODEIS(nick, modes)					RPL_PREFIX("221", nick) + " :" + modes + CLRF

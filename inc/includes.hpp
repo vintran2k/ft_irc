@@ -20,7 +20,10 @@
 
 #include "colors.hpp"
 
-#define	MAX_CONNECTIONS		100
+#define SERVER_VERSION		"v4.2"
+#define	MAX_CONNECTIONS		10000
+#define CHANNEL_MODES		"iklnot"
+#define USER_MODES			"io"
 #define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
 

@@ -4,7 +4,6 @@
 #include "../network/Client.hpp"
 #include "Channel.hpp"
 
-#define USER_MODES "io"
 
 class Channel;
 

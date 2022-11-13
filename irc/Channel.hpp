@@ -3,7 +3,6 @@
 #include "../inc/includes.hpp"
 #include "User.hpp"
 
-#define CHANNEL_MODES	"iklnot"
 
 class User;
 

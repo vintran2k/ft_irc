@@ -201,6 +201,7 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 			serverReply.push_back(std::make_pair(fdClient, RPL_WELCOME(user->_nickName, user->_userName, user->_hostName)));
 			serverReply.push_back(std::make_pair(fdClient, RPL_YOURHOST(user->_nickName)));
 			serverReply.push_back(std::make_pair(fdClient, RPL_CREATED(user->_nickName, _startTime)));
+			serverReply.push_back(std::make_pair(fdClient, RPL_MYINFO(user->_nickName)));
 		}
 	}
 	return false;
