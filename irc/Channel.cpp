@@ -21,10 +21,9 @@ Channel::~Channel() {
 	_invited.clear();
 }
 
-int 	Channel::_addUser(User * user, std::string const key) {  // in progress
+int 	Channel::_addUser(User * user, std::string const key) {
 
-	(void)  key;
-	if (_users.find(user) != _users.end())
+	if (_isInChannel(user))
 		return 0;
 	if (_inviteOnly && _invited.find(user) == _invited.end())
 		return 1;
