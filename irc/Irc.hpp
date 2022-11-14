@@ -37,7 +37,6 @@ class Irc {
 		int									_fdKilled;
 		bool								_serverKilled;
 		std::string							_killer;
-		std::vector<std::string>			_motd;
 
 		void		_initCmds();
 		int			_findCommand(std::string & cmd) const;
