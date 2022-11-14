@@ -3,12 +3,12 @@
 #include "../inc/includes.hpp"
 
 #define CLRF							"\r\n"
-#define SERVER_HOSTNAME					std::string(SERVER_NAME)
+#define SERVER_HOSTNAME					std::string(SERVER_NAME) + ".fr"
 #define RPL_PREFIX(code, nick)			std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick)
 #define RPL_ERR(user, errMsg)			std::string("ERROR :Closing link: (" + user + ") [" + errMsg + "]")
 
 //	001
-#define RPL_WELCOME(nick, user, host)				RPL_PREFIX("001", nick) + " :Welcome to the ft_irc Network, " + nick + "!" + user + "@" + host + CLRF
+#define RPL_WELCOME(nick, user, host)				RPL_PREFIX("001", nick) + " :Welcome to the " + SERVER_NAME + " Network, " + nick + "!" + user + "@" + host + CLRF
 
 //	002
 #define RPL_YOURHOST(nick)							RPL_PREFIX("002", nick) + " :Your host is " + SERVER_HOSTNAME + ", running version " + SERVER_VERSION + CLRF

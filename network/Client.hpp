@@ -29,5 +29,5 @@ class Client {
 		std::string					_readBuffer;
 		size_t						_cmdSize;
 
-		int						recv();
+		int		recv();
 };

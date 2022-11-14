@@ -20,7 +20,7 @@
 #include <fstream>
 #include "colors.hpp"
 
-#define SERVER_NAME			"ft_irc.fr"
+#define SERVER_NAME			"ft_irc"
 #define SERVER_VERSION		"v4.2"
 #define	MAX_CONNECTIONS		10000
 #define ADMIN_USERNAME		"admin"

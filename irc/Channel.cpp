@@ -16,9 +16,9 @@ Channel::Channel(std::string const & name, User * admin) :
 
 Channel::~Channel() {
 
-	_users.clear();
-	_operators.clear();
-	_invited.clear();
+	// _users.clear();
+	// _operators.clear();
+	// _invited.clear();
 }
 
 int 	Channel::_addUser(User * user, std::string const key) {

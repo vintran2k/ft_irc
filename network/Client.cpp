@@ -50,7 +50,7 @@ int		Client::recv() {
 	if (ret == -1)
 		throw std::runtime_error("recv() failed");
 	else if (ret == 0)
-		return (0);
+		return 0;
 
 	buffer[ret] = '\0';
 	_readBuffer += buffer;

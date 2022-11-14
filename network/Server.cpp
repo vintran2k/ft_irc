@@ -39,9 +39,9 @@ Server::~Server() {
 
 	for(it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
-	_clients.clear();
-	_serverReply.clear();
-	_clientsOFF.clear();
+	// _clients.clear();
+	// _serverReply.clear();
+	// _clientsOFF.clear();
 
 	std::cout << LOGPREFIX << BIGREEN << "Server stopped";
 	if (_irc.getServerKilled())
@@ -155,7 +155,7 @@ void	Server::run() {
 
 	while (1)
 	{
-		//	Receive data form clients and make reply from Irc
+		//	Receive data from clients and make reply from Irc
 		fdsSelected = selectFd();
 		recvAndMakeReply(fdsSelected);
 		if (_irc.getServerKilled())

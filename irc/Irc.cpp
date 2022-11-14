@@ -18,8 +18,8 @@ Irc::~Irc() {
 		delete uIt->second;
 	for (cIt = _channels.begin(); cIt != _channels.end(); cIt++)
 		delete cIt->second;
-	_users.clear();
-	_channels.clear();
+	// _users.clear();
+	// _channels.clear();
 }
 
 void				Irc::_initCmds() {
@@ -142,7 +142,7 @@ Channel *				Irc::_addNewChannel(std::string const & name, User * user) {
 	return channel;
 }
 
-int						Irc::_findCommand(std::string & cmd) {
+int						Irc::_findCommand(std::string & cmd) const {
 
 	for (int i = 0; i < 21; i++)
 		if (cmd == _cmdNames[i])
@@ -168,6 +168,16 @@ int						Irc::getFdKilled() {
 bool					Irc::getServerKilled() const { return _serverKilled; }
 
 std::string const &		Irc::getKiller() const { return _killer; }
+
+void		Irc::_sendSuccessRegistration(User & user, std::vector<t_reply> & serverReply) {
+
+	std::vector<std::string> sCmd;
+	serverReply.push_back(std::make_pair(user._fd, RPL_WELCOME(user._nickName, user._userName, user._hostName)));
+	serverReply.push_back(std::make_pair(user._fd, RPL_YOURHOST(user._nickName)));
+	serverReply.push_back(std::make_pair(user._fd, RPL_CREATED(user._nickName, _startTime)));
+	serverReply.push_back(std::make_pair(user._fd, RPL_MYINFO(user._nickName)));
+	_MOTD(user, sCmd, serverReply);
+}
 
 bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string cmd) {
 
@@ -202,13 +212,7 @@ bool	Irc::getReply(std::vector<t_reply> & serverReply, int fdClient, std::string
 		if (sCmd[0] == "QUIT")
 			return true;
 		if (!isRegisterBefore && user->_isRegister)
-		{
-			serverReply.push_back(std::make_pair(fdClient, RPL_WELCOME(user->_nickName, user->_userName, user->_hostName)));
-			serverReply.push_back(std::make_pair(fdClient, RPL_YOURHOST(user->_nickName)));
-			serverReply.push_back(std::make_pair(fdClient, RPL_CREATED(user->_nickName, _startTime)));
-			serverReply.push_back(std::make_pair(fdClient, RPL_MYINFO(user->_nickName)));
-			_MOTD(*user, sCmd, serverReply);
-		}
+			_sendSuccessRegistration(*user, serverReply);
 	}
 	return false;
 }
