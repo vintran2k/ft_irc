@@ -76,7 +76,7 @@ void	Server::deleteClient(int const fd) {
 
 int		Server::selectFd() {
 
-	//	Create a list with server fd and all clients fd
+	//	Create a set with server fd and all clients fd
 	int	fd = _socket.getFd();
 	_fdMin = fd;
 	_fdMax = fd;
