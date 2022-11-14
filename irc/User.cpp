@@ -15,7 +15,7 @@ User::User(int fd) :
 	_invisible(false)
 {}
 
-User::~User() { _channels.clear(); }
+User::~User() {}
 
 std::string const &		User::getNickName() const { return _nickName; }
 

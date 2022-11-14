@@ -1,7 +1,6 @@
 #include "Client.hpp"
 
-Client::Client(int fd) : _fd(fd)
-{ 
+Client::Client(int fd) : _fd(fd) { 
 
 	std::cout << LOGPREFIX
 	<< GRAY << "Client on socket "

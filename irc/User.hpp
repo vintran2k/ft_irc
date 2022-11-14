@@ -4,7 +4,6 @@
 #include "../network/Client.hpp"
 #include "Channel.hpp"
 
-
 class Channel;
 
 class User {

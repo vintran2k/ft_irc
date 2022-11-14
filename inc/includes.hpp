@@ -27,7 +27,7 @@
 #define ADMIN_PASSWORD		"adminPass"
 #define CHANNEL_MODES		"iklnot"
 #define USER_MODES			"io"
-#define LOGPREFIX						CYAN << "[" << getTime() << "]" << "\t"
+#define LOGPREFIX			CYAN << "[" << getTime() << "]" << "\t"
 
 #define vectorIt(type)					std::vector<type>::iterator
 #define mapIt(type1, type2)				std::map<type1, type2>::iterator

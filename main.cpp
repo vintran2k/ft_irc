@@ -69,7 +69,6 @@ void	signalExit(int sig) {
 	}
 }
 
-
 int	main(int ac, char **av) {
 
 	int				port;

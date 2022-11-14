@@ -24,10 +24,10 @@ class Client {
 		Client(Client const & rhs);
 		Client &	operator=(Client const & rhs);
 
-		int	const					_fd;
-		std::string					_cmd;
-		std::string					_readBuffer;
-		size_t						_cmdSize;
+		int	const		_fd;
+		std::string		_cmd;
+		std::string		_readBuffer;
+		size_t			_cmdSize;
 
 		int		recv();
 };

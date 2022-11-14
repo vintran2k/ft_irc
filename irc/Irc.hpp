@@ -6,7 +6,6 @@
 #include "Channel.hpp"
 #include "replies.hpp"
 
-
 class Irc {
 
 	public:

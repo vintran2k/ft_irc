@@ -13,9 +13,7 @@ Socket::~Socket() {
 		close(_fd);
 }
 
-
 int							Socket::getFd() const { return _fd; }
-
 
 void	Socket::socket(int domain, int type, int protocol) {
 

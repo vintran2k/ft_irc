@@ -19,7 +19,7 @@ void	split(std::vector<std::string> & res, std::string str, std::string const & 
 
 std::string	appendParams(std::vector<std::string> const & sCmd, std::vector<std::string>::const_iterator begin) {
 
-	std::string	res;
+	std::string									res;
 	std::vector<std::string>::const_iterator	it;
 
 	for (it = begin; it != sCmd.end(); it++)

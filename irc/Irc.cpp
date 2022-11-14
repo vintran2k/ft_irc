@@ -18,8 +18,6 @@ Irc::~Irc() {
 		delete uIt->second;
 	for (cIt = _channels.begin(); cIt != _channels.end(); cIt++)
 		delete cIt->second;
-	// _users.clear();
-	// _channels.clear();
 }
 
 void				Irc::_initCmds() {

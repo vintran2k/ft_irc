@@ -39,9 +39,6 @@ Server::~Server() {
 
 	for(it = _clients.begin(); it != _clients.end(); it++)
 		delete it->second;
-	// _clients.clear();
-	// _serverReply.clear();
-	// _clientsOFF.clear();
 
 	std::cout << LOGPREFIX << BIGREEN << "Server stopped";
 	if (_irc.getServerKilled())
