@@ -20,16 +20,14 @@ bool	getMotd(std::vector<std::string> & motd) {
 void	Irc::_MOTD(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)sCmd;
-	if (_motd.empty())
+	std::vector<std::string>	motd;
+	if (!getMotd(motd))
 	{
-		if (!getMotd(_motd))
-		{
-			serverReply.push_back(std::make_pair(user._fd, ERR_NOMOTD(user._nickName)));
-			return ;
-		}
+		serverReply.push_back(std::make_pair(user._fd, ERR_NOMOTD(user._nickName)));
+		return ;
 	}
 	std::string	reply = RPL_MOTDSTART(user._nickName);
-	for (vectorIt(std::string) it = _motd.begin(); it != _motd.end(); it++)
+	for (vectorIt(std::string) it = motd.begin(); it != motd.end(); it++)
 		reply += RPL_MOTD(user._nickName, *it);
 	reply += RPL_ENDOFMOTD(user._nickName);
 	serverReply.push_back(std::make_pair(user._fd, reply));
