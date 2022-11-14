@@ -32,7 +32,7 @@ SRCS			=	main.cpp					\
 
 
 CC				=	@c++
-FLAGS			=	-Wall -Wextra -Werror -std=c++98 -g #// -g a enlever
+FLAGS			=	-Wall -Wextra -Werror -std=c++98
 OBJDIR			=	objs
 OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
