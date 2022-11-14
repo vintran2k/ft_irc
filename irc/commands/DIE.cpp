@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+//	An operator can use the DIE command to shutdown the server.
+
 void	Irc::_DIE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	(void)sCmd;

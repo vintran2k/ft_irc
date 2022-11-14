@@ -1,5 +1,8 @@
 #include "../Irc.hpp"
 
+//	PRIVMSG is used to send private messages between users, as well as to
+//	send messages to channels.
+
 void	Irc::_PRIVMSG(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 3)

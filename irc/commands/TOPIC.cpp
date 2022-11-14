@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+//	The TOPIC command is used to change or view the topic of a channel.
+
 void	Irc::_TOPIC(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 2)

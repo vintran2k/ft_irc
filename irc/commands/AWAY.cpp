@@ -1,5 +1,10 @@
 #include "../Irc.hpp"
 
+//	With the AWAY command, clients can set an automatic reply string for
+//	any PRIVMSG commands directed at them (not to a channel they are on).
+//	The server sends an automatic reply to the client sending the PRIVMSG
+//	command.
+
 void	Irc::_AWAY(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() == 1)

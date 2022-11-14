@@ -1,5 +1,8 @@
 #include "../Irc.hpp"
 
+//	The KILL command is used to cause a client-server connection to be
+//	closed by the server which has the actual connection.
+
 void	Irc::_KILL(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (!user._operator)

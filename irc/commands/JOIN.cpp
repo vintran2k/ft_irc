@@ -1,5 +1,8 @@
 #include "../Irc.hpp"
 
+//	The JOIN command is used by a user to request to start listening to
+//	the specific channel.
+
 void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	std::vector<std::string>	channels, keys;

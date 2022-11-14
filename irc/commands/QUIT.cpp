@@ -1,5 +1,8 @@
 #include "../Irc.hpp"
 
+//	The QUIT command is used to leave the server.
+//	A client session is terminated with a quit message.
+
 void	Irc::_QUIT(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	std::string	quitMsg;

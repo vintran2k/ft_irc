@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+//	The MOTD command is used to get the "Message Of The Day" of the server.
+
 bool	getMotd(std::vector<std::string> & motd) {
 
 	std::ifstream	motdFile("./irc/motd");

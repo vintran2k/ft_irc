@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+//	The INVITE command is used to invite a user to a channel.
+
 void	Irc::_INVITE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 3)

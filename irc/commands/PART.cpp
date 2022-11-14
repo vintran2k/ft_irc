@@ -1,5 +1,9 @@
 #include "../Irc.hpp"
 
+//	The PART command causes the user sending the message to be removed
+//	from the list of active members for all given channels listed in the
+//	parameter string.
+
 void	Irc::_PART(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() == 1)

@@ -1,5 +1,8 @@
 #include "../Irc.hpp"
 
+//	The USER command is used at the beginning of connection to specify
+//	the username, hostname and realname of a new user.
+
 void	Irc::_USER(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 5)

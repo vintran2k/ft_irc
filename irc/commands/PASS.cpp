@@ -1,5 +1,10 @@
 #include "../Irc.hpp"
 
+//	The PASS command is used to set a 'connection password'.
+//	The password can and MUST be set before any attempt to register
+//	the connection is made.  Currently this requires that user send a
+//	PASS command before sending the NICK/USER combination.
+
 void	Irc::_PASS(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() == 1)

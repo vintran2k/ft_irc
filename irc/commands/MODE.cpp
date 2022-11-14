@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+//	The MODE command is used to define the modes of a channel or a user.
+
 void	Irc::_userMODE(User & user, std::vector<t_reply> & serverReply, std::string const & target, std::string const & modes) {
 
 	if (user._nickName != target)

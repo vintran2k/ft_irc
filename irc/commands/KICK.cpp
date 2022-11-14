@@ -1,5 +1,8 @@
 #include "../Irc.hpp"
 
+//	The KICK command can be used to request the forced removal of a user
+//	from a channel.
+
 void	Irc::_KICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 3)

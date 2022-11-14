@@ -1,5 +1,9 @@
 #include "../Irc.hpp"
 
+//	The WHO command is used by a client to generate a query which returns
+//	a list of information which 'matches' the <mask> parameter given by
+//	the client.
+
 void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	std::string	mask = "*";

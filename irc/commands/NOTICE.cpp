@@ -1,5 +1,9 @@
 #include "../Irc.hpp"
 
+//	The NOTICE command is used similarly to PRIVMSG.  The difference
+//	between NOTICE and PRIVMSG is that automatic replies MUST NEVER be
+//	sent in response to a NOTICE message.
+
 void	Irc::_NOTICE(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 3)

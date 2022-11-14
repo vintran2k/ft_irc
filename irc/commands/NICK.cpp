@@ -2,6 +2,9 @@
 
 #define VALIDCHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789|^_-{}[]\\"
 
+//	NICK command is used to give user a nickname or
+//	change the existing one.
+
 void	Irc::_NICK(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) { //	username ne change pas dans hexchat
 
 	std::string	nickName;

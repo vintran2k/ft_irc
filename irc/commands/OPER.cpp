@@ -1,5 +1,9 @@
 #include "../Irc.hpp"
 
+//	A normal user uses the OPER command to obtain operator privileges.
+//	The combination of <name> and <password> are REQUIRED to gain
+//	Operator privileges.
+
 void	Irc::_OPER(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	if (sCmd.size() < 3)

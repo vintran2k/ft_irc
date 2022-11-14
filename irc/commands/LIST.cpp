@@ -1,5 +1,7 @@
 #include "../Irc.hpp"
 
+//	The list command is used to list channels and their topics.
+
 void	Irc::_LIST(User & user, std::vector<std::string> & sCmd, std::vector<t_reply> & serverReply) {
 
 	std::map<std::string, Channel *>	channels;
