@@ -103,7 +103,7 @@ int		Server::selectFd() {
 
 void	Server::recvAndMakeReply(int fdsSelected) {
 
-	//	Loop on the set of available fd
+	//	Looping on the set of available fd
 	for (int fd = _fdMin; fd <= _fdMax && fdsSelected; fd++)
 	{
 		if (FD_ISSET(fd, &_readFds))
