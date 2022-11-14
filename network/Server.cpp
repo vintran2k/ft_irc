@@ -124,7 +124,7 @@ void	Server::recvAndMakeReply(int fdsSelected) {
 					if (isRead)
 						disconnect = _irc.getReply(_serverReply, fd, _clients[fd]->getCmd());
 					//	If no data after recv(): client is disconnected
-					else if (_clients[fd]->getReadBuffer().empty())	// sauf ctrlD // ctrlC pb
+					else if (_clients[fd]->getReadBuffer().empty())
 					{
 						_irc.disconnectUser(fd);
 						deleteClient(fd);
