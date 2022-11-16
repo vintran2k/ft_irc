@@ -5,7 +5,7 @@
 #define CLRF							"\r\n"
 #define SERVER_HOSTNAME					std::string(SERVER_NAME) + ".fr"
 #define RPL_PREFIX(code, nick)			std::string(":" + SERVER_HOSTNAME + " " + code + " " + nick)
-#define RPL_ERR(user, errMsg)			std::string("ERROR :Closing link: (" + user + ") [" + errMsg + "]")
+#define RPL_ERR(user, errMsg)			std::string("ERROR :Closing link: (" + user + ") [" + errMsg + "]" + CLRF)
 
 //	001
 #define RPL_WELCOME(nick, user, host)				RPL_PREFIX("001", nick) + " :Welcome to the " + SERVER_NAME + " Network, " + nick + "!" + user + "@" + host + CLRF
