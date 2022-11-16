@@ -26,9 +26,12 @@ void	Irc::_KILL(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 				comment = appendParams(sCmd, sCmd.begin() + 2);
 			else
 				comment = "Killed by " + user._nickName;
+			
+			serverReply.push_back(std::make_pair(target->_fd, user._prefix + " KILL " + target->_nickName + " " + comment + CLRF));
+			
 			std::vector<std::string>	quitCmd;
 			quitCmd.push_back("QUIT");
-			quitCmd.push_back(comment);
+			quitCmd.push_back(":Killed");
 			_QUIT(*target, quitCmd, serverReply);
 		}
 	}
