@@ -7,7 +7,7 @@ void	Irc::_KILL(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 
 	if (!user._operator)
 		serverReply.push_back(std::make_pair(user._fd, ERR_NOPRIVILEGES(user._nickName)));
-	else if (sCmd.size() == 1)
+	else if (sCmd.size() < 3)
 		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 	else if (sCmd[1] == SERVER_HOSTNAME)
 		serverReply.push_back(std::make_pair(user._fd, ERR_CANTKILLSERVER(user._nickName)));
@@ -21,11 +21,7 @@ void	Irc::_KILL(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 		else
 		{
 			_fdKilled = target->_fd;
-			std::string	comment;
-			if (sCmd.size() > 2)
-				comment = appendParams(sCmd, sCmd.begin() + 2);
-			else
-				comment = "Killed by " + user._nickName;
+			std::string	comment = appendParams(sCmd, sCmd.begin() + 2);
 			
 			serverReply.push_back(std::make_pair(target->_fd, user._prefix + " KILL " + target->_nickName + " " + comment + CLRF));
 			
