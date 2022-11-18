@@ -59,7 +59,9 @@ void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply
 						|| maskCmp(mask, u->_realName) || maskCmp(mask, u->_nickName))
 					valid = true;
 			}
-			if ((u != &user && u->_invisible && !_isCommonChannel(u, &user)) || (onlyOp && !u->_operator))
+			if ((u != &user && u->_invisible) || _isCommonChannel(u, &user) || (onlyOp && !u->_operator))
+				valid = false;
+			if (u == &user && (mask == "*" || mask == "0"))
 				valid = false;
 			if (valid)
 			{
