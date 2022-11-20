@@ -23,7 +23,7 @@ void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply
 			return ;
 		for (setIt(User *) it = channel->_users.begin(); it != channel->_users.end(); it++)
 		{
-			if (!((channel->_isInChannel(&user) && (*it)->_invisible) || (onlyOp && !(*it)->_operator)))
+			if (!((!channel->_isInChannel(&user) && (*it)->_invisible) || (onlyOp && !(*it)->_operator)))
 			{
 				flags = (*it)->_away ? "G" : "H";
 				if ((*it)->_operator)
@@ -51,26 +51,36 @@ void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply
 			User *	u = it->second;
 			bool	valid = false;
 
-			if (mask == "*" || mask == "0")
-				valid = true;
-			else
+			if (onlyOp && !u->_operator)
+				valid = false;
+			if (!onlyOp)
 			{
-				if (maskCmp(mask, u->_hostName) || maskCmp(mask, u->_serverName)
-						|| maskCmp(mask, u->_realName) || maskCmp(mask, u->_nickName))
+				if (mask == "*" || mask == "0")
 					valid = true;
-			}
-			if ((u != &user && u->_invisible) || _isCommonChannel(u, &user) || (onlyOp && !u->_operator))
-				valid = false;
-			if (u == &user && (mask == "*" || mask == "0"))
-				valid = false;
-			if (valid)
-			{
-				std::string	chan = u->_channels.empty() ? "*" : (*u->_channels.rbegin())->_name;
-				flags = u->_away ? "G" : "H";
-				if (u->_operator)
-					flags += "*";
-				reply += RPL_WHOREPLY(user._nickName, chan, u->_userName,
-					u->_hostName, u->_serverName, u->_nickName, flags, u->_realName);
+				else if (maskCmp(mask.c_str(), u->_hostName.c_str()) || maskCmp(mask.c_str(), u->_serverName.c_str())
+						|| maskCmp(mask.c_str(), u->_realName.c_str()) || maskCmp(mask.c_str(), u->_nickName.c_str()))
+				{
+					std::cout << BGREEN << "TRUE" << WHITE << std::endl;
+					valid = true;
+				}
+				if (u != &user && u->_invisible)
+					valid = false;
+				else
+				{
+					if (mask == "*" || mask == "0")
+						valid = _isCommonChannel(u, &user) ? false : true;
+					else
+						valid = true;
+				}
+				if (valid)
+				{
+					std::string	chan = u->_channels.empty() ? "*" : (*u->_channels.rbegin())->_name;
+					flags = u->_away ? "G" : "H";
+					if (u->_operator)
+						flags += "*";
+					reply += RPL_WHOREPLY(user._nickName, chan, u->_userName,
+						u->_hostName, u->_serverName, u->_nickName, flags, u->_realName);
+				}
 			}
 		}
 	}
