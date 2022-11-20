@@ -59,10 +59,7 @@ void	Irc::_WHO(User & user, std::vector<std::string> & sCmd, std::vector<t_reply
 					valid = true;
 				else if (maskCmp(mask.c_str(), u->_hostName.c_str()) || maskCmp(mask.c_str(), u->_serverName.c_str())
 						|| maskCmp(mask.c_str(), u->_realName.c_str()) || maskCmp(mask.c_str(), u->_nickName.c_str()))
-				{
-					std::cout << BGREEN << "TRUE" << WHITE << std::endl;
 					valid = true;
-				}
 				if (u != &user && u->_invisible)
 					valid = false;
 				else
