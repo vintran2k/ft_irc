@@ -38,4 +38,4 @@ void				getAllIrcCommands(std::set<std::string> & ircCommands);
 void				split(std::vector<std::string> & res, std::string str, std::string const & delimiter);
 std::string			appendParams(std::vector<std::string> const & sCmd, std::vector<std::string>::const_iterator begin);
 std::string const	getTime();
-bool				maskCmp(std::string const mask, std::string const s);
+bool				maskCmp(char const * mask, char const * s);

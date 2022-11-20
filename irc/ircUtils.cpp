@@ -40,31 +40,19 @@ std::string const	getTime() {
 	return (res);
 }
 
-bool				maskCmp(std::string const mask, std::string const s) {
+bool				maskCmp(char const * mask, char const * s) {
 
-	size_t	pos;
-
-	if (mask == s)
+	if (*mask == '\0' && *s == '\0')
 		return true;
 
-	pos = mask.find('*');
-	if (pos != std::string::npos)
-	{
-		if (pos != 0)
-		{
-			if (s.compare(0, pos, mask.c_str(), pos) != 0)
-				return false;
-		}
-		if (pos != mask.size() - 1)
-		{
-			std::string	toFind = mask.substr(pos + 1);
-			size_t	sPos = s.find(toFind);
-			if (sPos == std::string::npos || (sPos + toFind.size() != s.size()))
-				return false;
-		}
-		return true;
-	}
-	return false;
+	if (*mask == '*' && *(mask + 1) != '\0' && *s == '\0')
+		return false;
+	if (*mask == *s)
+		return (maskCmp(mask + 1, s + 1));
+
+	if (*mask == '*')
+		return maskCmp(mask + 1, s) || maskCmp(mask, s + 1);
+	return (false);
 }
 
 void	getAllIrcCommands(std::set<std::string> & ircCommands) {
