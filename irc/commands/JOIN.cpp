@@ -12,6 +12,7 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 		serverReply.push_back(std::make_pair(user._fd, ERR_NEEDMOREPARAMS(user._nickName, sCmd[0])));
 		return ;
 	}
+
 	split(channels, sCmd[1], ",");
 	if (sCmd.size() > 2)
 		split(keys, sCmd[2], ",");
@@ -29,7 +30,7 @@ void	Irc::_JOIN(User & user, std::vector<std::string> & sCmd, std::vector<t_repl
 			if (channel)
 			{
 				if (user._channels.find(channel) != user._channels.end())
-					return ;
+					continue ;
 				int	ret = channel->_addUser(&user, key);
 				if (ret != 0)
 				{

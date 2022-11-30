@@ -34,16 +34,14 @@ SRCS			=	main.cpp					\
 CC				=	@c++
 FLAGS			=	-Wall -Wextra -Werror -std=c++98
 OBJDIR			=	objs
-OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
-DEP				=	$(OBJS:.o=.d)
+OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:%.cpp=%.o))
 
--include $(DEP)
 
 $(OBJDIR)/%.o	:	%.cpp
 				@mkdir -p $(OBJDIR)/network
 				@mkdir -p $(OBJDIR)/irc
 				@mkdir -p $(OBJDIR)/irc/commands
-				$(CC) $(FLAGS) -MMD -MP -c $< -o $@
+				$(CC) $(FLAGS) -c $< -o $@
 
 
 $(NAME)			:	$(OBJS)
