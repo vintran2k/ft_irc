@@ -31,21 +31,23 @@ SRCS			=	main.cpp					\
 					irc/commands/WHO.cpp
 
 
-CC				=	@c++
+CC				=	c++
 FLAGS			=	-Wall -Wextra -Werror -std=c++98
+DFLAGS			=	-MMD -MP
 OBJDIR			=	objs
 OBJS			=	$(addprefix $(OBJDIR)/, $(SRCS:%.cpp=%.o))
+DEPS			=	$(addprefix $(OBJDIR)/, $(SRCS:%.cpp=%.d))
 
 
 $(OBJDIR)/%.o	:	%.cpp
 				@mkdir -p $(OBJDIR)/network
 				@mkdir -p $(OBJDIR)/irc
 				@mkdir -p $(OBJDIR)/irc/commands
-				$(CC) $(FLAGS) -c $< -o $@
+				@$(CC) $(FLAGS) $(DFLAGS) -c $< -o $@
 
 
 $(NAME)			:	$(OBJS)
-				$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+				@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
 				@echo "\033[1;30m[$(NAME)] \033[1;32mcreated !\033[0m"
 
 all				:	$(NAME)
@@ -59,5 +61,7 @@ fclean			:	clean
 				@echo "\033[1;30m[$(NAME)] \033[1;31mdeleted !\033[0m"
 
 re				:	fclean all
+
+-include $(DEPS)
 
 .PHONY			: 	clean fclean all re
